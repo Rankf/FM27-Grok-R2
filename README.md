@@ -1,4 +1,4 @@
-# FM27 Grok R2 测试适配包
+# FM27 Grok R2.1 测试适配包
 
 基于 FM27_grok v2.0 的非官方适配，仅面向 Windows Steam **Build 26385295**。
 
@@ -8,7 +8,9 @@
 
 ## 下载与安装
 
-请在 [R2 测试版下载页面](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2-test) 下载附件 `FM27_Grok_26385295_R2_Test_NoHidden.zip`，不要下载 GitHub 自动生成的 Source code ZIP。
+请在 [R2.1 测试版下载页面](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.1-test) 下载全量包 `FM27_Grok_26385295_R21_Test_NoHidden.zip`，不要下载 GitHub 自动生成的 Source code ZIP。
+
+已经解压过 R2 的用户，也可以只下载 `FM27_Grok_R21_Installer_Update.zip`，将其中的 `install.ps1` 和 `manifest.json` 覆盖到原 R2 目录，与 `Install.bat` 同级。**小补丁不能独立使用，必须保留完整 R2 的 bundles、originals 和 skins。**
 
 1. 完整解压安装包，退出游戏。
 2. 双击 `Install.bat`。
@@ -26,7 +28,8 @@
 | --- | --- |
 | Steam Build 26385295 对应的干净基础资源 | 纳入校验列表，应能通过资源校验；通过不等于所有游戏界面都已实测 |
 | 本项目已识别的首版／R2 测试包文件 | 纳入升级或重复安装校验 |
-| 旧 Grok v2.0、其他旧皮肤或比赛界面补丁 | **没有覆盖全部文件状态**，可能被拒绝，不能保证直接覆盖升级 |
+| 本项目已核对的旧 Grok v2.0 文件 | R2.1 新增识别；必须从该安装对应的 Steam 清单确认实际 Build 为26385295后才允许升级 |
+| 未收录的旧皮肤或其他比赛界面补丁 | 仍可能被拒绝，不能保证直接覆盖升级 |
 | 其他 Steam Build、Xbox／Game Pass 或其他平台 | 未验证，不应按通用兼容包使用 |
 | 文件缺失、损坏或其他未知内容 | 停止操作，需要进一步核对 |
 
@@ -39,9 +42,21 @@
 3. 如果 Build 相同且有旧补丁，可退出游戏，通过 Steam“验证游戏文件完整性”恢复当前平台提供的原版文件，再选 **4** 检查。验证可能撤销其他游戏文件补丁；若 Steam 已有新更新，恢复后的版本也可能超出本包支持范围。
 4. 仍失败时，请按下方反馈要求提交实际 Build ID 和报错文件 SHA-256。不要反复安装或直接修改安装器白名单。
 
+R2.1 会一次列出全部资源状态，并在安装包的 `Diagnostics` 目录生成 JSON 诊断报告。报告包含目标与实际 Build、文件名、大小、SHA-256及判定，不写入游戏文件；只检查时无需填写用户文档目录。无法确认实际 Build 时，已知旧 Grok 文件也不会被直接放行。
+
+完整包的 `originals` 已有目标版本的7个原版资源，包括 `ui-datacollections_assets_all.bundle`。不建议脱离版本信息单独交换原版文件或跨版本手动覆盖。文件创建／修改时间不能单独证明“Steam验证后又被某个补丁覆盖”。
+
 基础文件已补做 Steam 缓存下载清单核对，7 个资源全部匹配，包含已收到反馈的比赛界面资源。核对范围与记录见 [基础资源校验说明](docs/BASELINE_CHECK.md)。这项检查不能替代对反馈者实际文件的核对。
 
-## R2 修正
+## R2.1 安装器修正
+
+确认 R2 未识别原 Grok v2.0 的部分文件状态，例如 datacollections 的 `cddf4059…`，可能误拦截目标正式版上的旧皮肤残留。R2.1 收录了实际取得的 v2.0 包内校验值，并增加实际 Build 检查；没有放行任意未知文件。
+
+同时改进 Steam 多库发现，区分文件缺失与未知修改，输出实际校验值和诊断报告。界面资源与 R2 逐字节一致，不包含新的 UI 功能或隐藏属性补丁。
+
+安装器源文件见 [installer](installer)，模拟测试结果见 [r21-installer-tests.json](docs/r21-installer-tests.json)。测试覆盖旧 v2.0 两种侧栏升级、重复安装、恢复、未知文件、缺失文件、错误 Build、无法确认 Build 和写入失败回滚。仍未完成游戏内全面验证。
+
+## R2 界面修正
 
 原皮肤将 `XGTableTile_8x4` 资源改造成浮动侧栏。首个测试适配包误保留了原版表格，导致侧栏展开后出现 XG TABLE。R2 恢复了完整侧栏，并迁移正式版新增字段。
 
@@ -67,6 +82,7 @@
 - 安装包版本、选择的菜单项，以及完整报错文件名和文字。
 - 之前安装过的皮肤／比赛界面补丁，是否已验证游戏完整性。
 - 校验失败时，提供对应文件的 **SHA-256**。
+- R2.1 用户优先附上 `Diagnostics/compatibility_*.json` 报告，其中已包含上述版本和资源信息。
 - 如果安装成功但显示异常，提供侧栏类型、游戏分辨率、Windows 缩放比例、复现步骤及截图。
 
 **查 Build ID：** 在该游戏所属 Steam 库的 `steamapps/appmanifest_4530370.acf` 中，用记事本查找 `"buildid"`，只需提供这一行。

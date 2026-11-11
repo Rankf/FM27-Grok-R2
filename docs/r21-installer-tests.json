@@ -1,0 +1,13 @@
+{
+  "passed": [
+    "clean target build and read-only compatibility check",
+    "v2 fixed -> R2.1 install / reinstall / restore",
+    "v2 overlay -> R2.1 install / reinstall / restore",
+    "all unknown files reported; no game changes",
+    "missing file distinguished from modified file",
+    "wrong actual Steam Build refused even with known resources",
+    "legacy upgrade refused without a matching Steam manifest",
+    "write failure rolls resources and skin back",
+    "R2 UI and original resources unchanged"
+  ]
+}

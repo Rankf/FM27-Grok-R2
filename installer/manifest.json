@@ -1,0 +1,126 @@
+{
+  "build": "26385295",
+  "files": {
+    "ui-datacollections_assets_all.bundle": {
+      "base": "bc395f970c2bc63b9b666890f3d32d6eac90ef6565d638559c554f54d7c77f94",
+      "accepted": [
+        "5ad9f712ca528aef8c105f87ec8dd367af481716642f3824d02ae444bc042da4",
+        "bc395f970c2bc63b9b666890f3d32d6eac90ef6565d638559c554f54d7c77f94"
+      ],
+      "legacyGrokV2": [
+        "cddf4059efc1758a9fea0b02c66ecd61ad2f42098d5e16eafd5c0fa4699d9f2c"
+      ]
+    },
+    "ui-tablefactories_assets_all.bundle": {
+      "base": "c2e34ebdc39da4a3acb856e994e9eb0effbc0dc7e966a3567c84e4bba646cd3b",
+      "accepted": [
+        "6a0cef96f1d6264c2c01b534593970589326177f6872d1dea67c7eb8e3ec8e8c",
+        "c2e34ebdc39da4a3acb856e994e9eb0effbc0dc7e966a3567c84e4bba646cd3b"
+      ],
+      "legacyGrokV2": [
+        "1cf1e31e643c2afe3ab8dbb3c64ecc72156968234dde46920fc8e830848cec07"
+      ]
+    },
+    "ui-tableviews_assets_all.bundle": {
+      "base": "90e56b4e006411f34b3f426f97bbeda7b985ab24abd627b29b8ebc35d56aadcd",
+      "accepted": [
+        "90e56b4e006411f34b3f426f97bbeda7b985ab24abd627b29b8ebc35d56aadcd",
+        "23be8fefd132b85ccb80ebbfe8d5c967688751c197585e28b27380a3b0379cf4"
+      ],
+      "legacyGrokV2": [
+        "aae3e460e2d5f3b962594f65c9cec2b736c1af0c4c0ad10e8421fc54c6f30fb3"
+      ]
+    },
+    "ui-tileslayouts_assets_all.bundle": {
+      "base": "dd934510ec9b71e67e0b478a674aefca5bfb118c523525d1eb51cf8e53fff171",
+      "accepted": [
+        "dd934510ec9b71e67e0b478a674aefca5bfb118c523525d1eb51cf8e53fff171",
+        "753e7d8d075e3028b013a388ec8d6fcd92f93fb812d9150d8312cc72c47710e7"
+      ],
+      "legacyGrokV2": [
+        "bca86a59210ae312bd5ef9748a47b3ce23be8095193e8fac79e67b920e8557ab"
+      ]
+    },
+    "ui-visualtreeassets_assets_gameworldvisualtreeassetpreload.bundle": {
+      "base": "5b017cad4954625832dc8ad1bb2e30c8fa61acec9fa942bec307ae789609a84c",
+      "accepted": [
+        "5b017cad4954625832dc8ad1bb2e30c8fa61acec9fa942bec307ae789609a84c",
+        "6afa77440213f7bb41df446b5daef85deb4081cb2bb227bf78340cbcd10cb8ff",
+        "9192f57ba8c9f5060b316b369582574831cbc61baa53da93e57b53088a7deb02"
+      ],
+      "legacyGrokV2": [
+        "03ab79d447acd4f49854f56e51e7771e10d2b5ade820b16aeb8497451cabc6ab",
+        "0b5b2bca10e6226421132ee2120ca05eea8c138ca553af74ee082001d7a20d68",
+        "240ae5734f0cab01c97bd435f3358fd78da76a6d8fcda3dd847b01cc858bbe59",
+        "71b3792b47f5de12caf1c90ae4b70afb0aec3e4d4ed17a6aecbb4aa357767319"
+      ]
+    },
+    "ui-visualtreeassets_assets_globalvisualtreeassetpreload.bundle": {
+      "base": "6ed36b0dbfd9a8e4256d5f771c54c899df4557cf7576cee9bda2a0a652c28b8b",
+      "accepted": [
+        "0c82ad17e9ea8a0daade28515f33bf5c83e174d1a59894ba19633e49110c620a",
+        "6ed36b0dbfd9a8e4256d5f771c54c899df4557cf7576cee9bda2a0a652c28b8b"
+      ],
+      "legacyGrokV2": [
+        "360d2271dab6158e8c7283cbe784dbd612ff2716a9183afdf82d9e47863e214d",
+        "afb9f893414e248dc03ce90bfae36a52249c03b23c66d24945bcc6da4480ce3c"
+      ]
+    },
+    "ui-visualtreeassets_assets_matchvisualtreeassetpreload.bundle": {
+      "base": "cf7f5e6b25b45668da7db634d95a5a785e8ce601f11a2b5e566a3ccc54e8f7b2",
+      "accepted": [
+        "cf7f5e6b25b45668da7db634d95a5a785e8ce601f11a2b5e566a3ccc54e8f7b2",
+        "26290b2a1362f6399db0406ba8de73e4224db541fffbf60744bfa0b3bcf72502"
+      ],
+      "legacyGrokV2": [
+        "e806d6e94f2eb61df75bc24826c5bf179b698d2fc00110b29ac71e0227f83b5f"
+      ]
+    }
+  },
+  "variants": {
+    "fixed": {
+      "ui-datacollections_assets_all.bundle": "5ad9f712ca528aef8c105f87ec8dd367af481716642f3824d02ae444bc042da4",
+      "ui-tablefactories_assets_all.bundle": "6a0cef96f1d6264c2c01b534593970589326177f6872d1dea67c7eb8e3ec8e8c",
+      "ui-tableviews_assets_all.bundle": "23be8fefd132b85ccb80ebbfe8d5c967688751c197585e28b27380a3b0379cf4",
+      "ui-tileslayouts_assets_all.bundle": "753e7d8d075e3028b013a388ec8d6fcd92f93fb812d9150d8312cc72c47710e7",
+      "ui-visualtreeassets_assets_gameworldvisualtreeassetpreload.bundle": "6afa77440213f7bb41df446b5daef85deb4081cb2bb227bf78340cbcd10cb8ff",
+      "ui-visualtreeassets_assets_globalvisualtreeassetpreload.bundle": "0c82ad17e9ea8a0daade28515f33bf5c83e174d1a59894ba19633e49110c620a",
+      "ui-visualtreeassets_assets_matchvisualtreeassetpreload.bundle": "26290b2a1362f6399db0406ba8de73e4224db541fffbf60744bfa0b3bcf72502"
+    },
+    "overlay": {
+      "ui-datacollections_assets_all.bundle": "5ad9f712ca528aef8c105f87ec8dd367af481716642f3824d02ae444bc042da4",
+      "ui-tablefactories_assets_all.bundle": "6a0cef96f1d6264c2c01b534593970589326177f6872d1dea67c7eb8e3ec8e8c",
+      "ui-tableviews_assets_all.bundle": "23be8fefd132b85ccb80ebbfe8d5c967688751c197585e28b27380a3b0379cf4",
+      "ui-tileslayouts_assets_all.bundle": "753e7d8d075e3028b013a388ec8d6fcd92f93fb812d9150d8312cc72c47710e7",
+      "ui-visualtreeassets_assets_gameworldvisualtreeassetpreload.bundle": "e0a92b01c6160671e723270e9075c1ffc25199741c523cfd334863eacdad4308",
+      "ui-visualtreeassets_assets_globalvisualtreeassetpreload.bundle": "0c82ad17e9ea8a0daade28515f33bf5c83e174d1a59894ba19633e49110c620a",
+      "ui-visualtreeassets_assets_matchvisualtreeassetpreload.bundle": "26290b2a1362f6399db0406ba8de73e4224db541fffbf60744bfa0b3bcf72502"
+    }
+  },
+  "styleHash": "28d4f7195f2056e88011715a3695e6569fec8ce9d309cbe1f2ed6b6de17d2eee",
+  "skinHashes": {
+    "skins/FM27_grok_fixed_1366x768/grok.uss": "633ea4ef55ff9e706aa76f8f73e07728166e38ffafec737d9f4fa777ef5a3e6c",
+    "skins/FM27_grok_fixed_1366x768/skin.json": "671b0569494c3361d23a6a38d0a69fa24a4569808c4464c2308cbd191dcc7d8c",
+    "skins/FM27_grok_fixed_1440x900/grok.uss": "1569edaac0010630531577015f21f2c9f5e52cd8c6545862dd79807e047ccabe",
+    "skins/FM27_grok_fixed_1440x900/skin.json": "bd4f562aac7404ce65b2b545d4934a85993ca88d82d8374b3cbf99940315c695",
+    "skins/FM27_grok_fixed_1920x1080/grok.uss": "7dad06c7ab8aaa1ac67edae6ffcb29660156b388d5111edd1cce40a87de37651",
+    "skins/FM27_grok_fixed_1920x1080/skin.json": "aef22699fa94d04ee7c536e95ceadd07ac586864fc6bd0d06eac52e39bb2ecc3",
+    "skins/FM27_grok_fixed_2560x1440/grok.uss": "949c9f11449f4adf8bb75f3fcecb2066caf62f09518381507b3cd55637a71e08",
+    "skins/FM27_grok_fixed_2560x1440/skin.json": "74a7348ecf03911948686d85e615029b4c35ad0a8787b1dc327a88cd3932d9ea",
+    "skins/FM27_grok_fixed_3840x2160/grok.uss": "201db9e1e3e25df6e27391b529cd3f283503d360c0f52f64fff6a1f5ffec95c0",
+    "skins/FM27_grok_fixed_3840x2160/skin.json": "190e368696a20d64ef23858375f143638f3d05a27faa59aee973b302cce8b759",
+    "skins/FM27_grok_overlay_1280x1024/grok.uss": "c9d2bee0ca832d7bffd84f400dfcba7190a619e24d153b6812a0954e9ac93493",
+    "skins/FM27_grok_overlay_1280x1024/skin.json": "2443d5e2cc110bc625590e7fb5c71ceb5db3c95a9d514a872d70effb3a923ce8",
+    "skins/FM27_grok_overlay_1366x768/grok.uss": "6fd69a62f7aa5f6acad1429b8789bc72cfa3ae0b2582bbe352f98faa94c52534",
+    "skins/FM27_grok_overlay_1366x768/skin.json": "1b35edf4d6278e002f7fb76fd07a31cba25a6ea952dcf84c68a69fd78bb76211",
+    "skins/FM27_grok_overlay_1440x900/grok.uss": "6d35b11012e738180c60694ee72f574d2ec84b041b2b2c568a668c00c35b835f",
+    "skins/FM27_grok_overlay_1440x900/skin.json": "a41423a9f6156106fca152d2080b685ee0f9e848dd84a35307071853a4bea948",
+    "skins/FM27_grok_overlay_1920x1080/grok.uss": "786c5547a10848e4d99bc927dcc9290bb97b10755908807c4cb094ae8a09b45c",
+    "skins/FM27_grok_overlay_1920x1080/skin.json": "60ffa1edbd2f32edf9ebccf6c481f333ccca55f47e817145efcd14c85158eba6",
+    "skins/FM27_grok_overlay_2560x1440/grok.uss": "7ed6a64e9ec9c1caa1ba559daac7fd00e9d3850de88dd4d67b58edff36196a84",
+    "skins/FM27_grok_overlay_2560x1440/skin.json": "de563da0f98b2f799fa6ed1b9acb165a81b894d4ff984bd1abd8fa959ad93e73",
+    "skins/FM27_grok_overlay_3840x2160/grok.uss": "76667852f0d74ce9981267db11e16358da6adb7bc3903a8479bf90ff17c94c77",
+    "skins/FM27_grok_overlay_3840x2160/skin.json": "d3ba448a098626de2e945cf5a958065c346db7450cb867063e5254b71a469f1f"
+  },
+  "installerRevision": "R2.1"
+}
