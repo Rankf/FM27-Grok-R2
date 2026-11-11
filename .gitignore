@@ -3,3 +3,4 @@ release-assets/
 *.log
 .env
 __pycache__/
+dist/
