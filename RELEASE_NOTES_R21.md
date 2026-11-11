@@ -13,7 +13,7 @@
 
 ## 下载
 
-- **首次使用：** 下载 `FM27_Grok_26385295_R21_Test_NoHidden.zip`，完整解压，退出游戏后运行 Install.bat。
+- **首次使用：** 先下载 [R2 完整包](https://github.com/Rankf/FM27-Grok-R2/releases/download/r2-test/FM27_Grok_26385295_R2_Test_NoHidden.zip)并解压，再应用本页的小补丁。R2.1 的界面资源完全相同，因此以小补丁形式分发。
 - **已有 R2 完整目录：** 下载小补丁 `FM27_Grok_R21_Installer_Update.zip`，把 install.ps1 和 manifest.json 覆盖到 Install.bat 同级目录，然后再次选4检查。小补丁不能独立运行。
 
 模拟目录测试已通过：旧 v2.0 固定／浮动版升级、重复安装、恢复、全部未知文件报告、缺失文件、错误 Build、无对应 Steam 清单时拒绝旧版升级、写入失败回滚。UI资源与R2逐字节一致。
