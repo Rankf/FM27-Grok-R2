@@ -8,12 +8,11 @@
 
 ## 下载与安装
 
-R2.1 以安装器更新补丁发布，复用 R2 的全部界面资源。
+**直接下载 [R2.1 完整安装包](https://github.com/Rankf/FM27-Grok-R2/releases/download/r2.1-test/FM27_Grok_26385295_R21_Test_NoHidden.zip)**，包含安装器、皮肤、资源文件和原版恢复文件。完整解压后运行 `Install.bat` 即可。
 
-- 首次使用：先下载 [R2 完整包](https://github.com/Rankf/FM27-Grok-R2/releases/download/r2-test/FM27_Grok_26385295_R2_Test_NoHidden.zip)并解压，再应用下面的小补丁。不要下载 GitHub 自动生成的 Source code ZIP。
-- 已有 R2 完整目录：在 [R2.1 更新页面](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.1-test) 下载 `FM27_Grok_R21_Installer_Update.zip`，将其中的 `install.ps1` 和 `manifest.json` 覆盖到原 R2 目录，与 `Install.bat` 同级。
+首次安装和已有 R2 的用户均可使用这份完整包，无需先下载 R2 或另打安装器补丁。不要下载 GitHub 自动生成的 Source code ZIP。
 
-**小补丁不能独立使用，必须保留完整 R2 的 bundles、originals 和 skins。** 应用后标题会显示 R2.1。
+完整包 SHA-256 见 [SHA256SUMS_R21_FULL.txt](SHA256SUMS_R21_FULL.txt)。[发布页面](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.1-test)中的旧安装器小补丁保留供历史使用，推荐下载文件名含 `26385295_R21_Test_NoHidden` 的完整包。
 
 1. 完整解压安装包，退出游戏。
 2. 双击 `Install.bat`。

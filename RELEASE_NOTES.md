@@ -1,6 +1,6 @@
 # R2 测试适配包
 
-**安装器更新：** [R2.1 测试版](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.1-test) 已补充已核对的旧 Grok v2.0 文件识别、实际 Build 检查和诊断报告。已有 R2 完整目录的用户可使用 R2.1 安装器小补丁；UI 资源没有变化。以下保留 R2 原始说明。
+**后续版本：** 请优先下载 [R2.1 完整安装包](https://github.com/Rankf/FM27-Grok-R2/releases/download/r2.1-test/FM27_Grok_26385295_R21_Test_NoHidden.zip)，完整解压后运行 Install.bat。R2.1 已补充已核对的旧 Grok v2.0 文件识别、实际 Build 检查和诊断报告；UI 资源没有变化。以下保留 R2 原始说明。
 
 目标版本为 Windows Steam **Build 26385295**，不含隐藏属性补丁。不是所有正式版更新通用的安装包，尚未完成游戏内全面验证。
 
