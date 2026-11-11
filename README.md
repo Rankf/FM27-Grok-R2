@@ -6,7 +6,7 @@
 
 ## 下载与安装
 
-发布后，请在本仓库的 Releases 页面下载附件 `FM27_Grok_26385295_R2_Test_NoHidden.zip`，不要下载 GitHub 自动生成的 Source code ZIP。
+请在 [R2 测试版下载页面](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2-test) 下载附件 `FM27_Grok_26385295_R2_Test_NoHidden.zip`，不要下载 GitHub 自动生成的 Source code ZIP。
 
 1. 完整解压安装包，退出游戏。
 2. 双击 `Install.bat`。
