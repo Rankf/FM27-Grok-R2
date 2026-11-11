@@ -13,8 +13,9 @@ ROOT = Path(__file__).resolve().parent.parent
 parser = argparse.ArgumentParser()
 parser.add_argument('--base', type=Path)
 parser.add_argument('--publish', action='store_true')
+parser.add_argument('--recipe', default='release/full-r21-recipe.json')
 args = parser.parse_args()
-recipe = json.loads((ROOT / 'release/full-r21-recipe.json').read_text(encoding='utf8'))
+recipe = json.loads((ROOT / args.recipe).read_text(encoding='utf8'))
 if args.base:
     source = args.base.read_bytes()
 else:
@@ -39,9 +40,9 @@ archive = out / recipe['output_name']
 archive.write_bytes(data)
 with zipfile.ZipFile(archive) as z:
     assert z.testzip() is None
-    prefix = 'FM27_Grok_26385295_R21_Test/'
+    prefix = recipe.get('root_prefix', 'FM27_Grok_26385295_R21_Test/')
     manifest = json.loads(z.read(prefix + 'manifest.json'))
-    assert manifest['installerRevision'] == 'R2.1'
+    assert manifest['installerRevision'] == recipe.get('revision', 'R2.1')
     for variant, files in manifest['variants'].items():
         for name, digest in files.items():
             assert hashlib.sha256(z.read(prefix + f'bundles/{variant}/{name}')).hexdigest() == digest
@@ -49,7 +50,7 @@ with zipfile.ZipFile(archive) as z:
         assert hashlib.sha256(z.read(prefix + 'originals/' + name)).hexdigest() == record['base']
     for name, digest in manifest['skinHashes'].items():
         assert hashlib.sha256(z.read(prefix + name)).hexdigest() == digest
-checksum = out / 'SHA256SUMS_R21_FULL.txt'
+checksum = out / recipe.get('checksum_name', 'SHA256SUMS_R21_FULL.txt')
 checksum.write_bytes((recipe['output_sha256'] + '  ' + archive.name + '\n').encode('ascii'))
 print('Exact full ZIP verified:', archive.name, recipe['output_sha256'], flush=True)
 
@@ -62,8 +63,8 @@ if args.publish:
                    'User-Agent': 'FM27-full-package-builder', 'Content-Type': content_type}
         with urllib.request.urlopen(urllib.request.Request(url, data=payload, headers=headers), timeout=180) as r:
             return json.load(r)
-    url = f'https://api.github.com/repos/{repo}/releases/tags/r2.1-test'
-    release = request(url)
+    releases = request(f'https://api.github.com/repos/{repo}/releases?per_page=100')
+    release = next(r for r in releases if r['tag_name'] == recipe.get('release_tag', 'r2.1-test'))
     for file in [archive, checksum]:
         payload = file.read_bytes()
         digest = 'sha256:' + hashlib.sha256(payload).hexdigest()

@@ -1,7 +1,9 @@
 # 安装器源文件
 
-这里记录 R2.1 安装器及对应资源清单，便于查看支持范围和版本检查逻辑。它们需要与完整 R2/R2.1 包中的 bundles、originals、skins 放在同一目录才能工作；单独克隆仓库不能安装皮肤。
+R2.2 安装器必须配合完整包 bundles、originals、skins 使用；单独克隆仓库不能安装。
 
-manifest 的 legacyGrokV2 仅来自实际取得的原 Grok v2.0 包内文件。旧版识别分支还要求游戏安装对应的 Steam appmanifest 确认目标 Build，不能用于跨版本强装。
+Build 不同只警告，相关资源及样式必须匹配。legacyGrokV2 分支仍要求对应 Steam 清单确认实际 Build 为 26385295。未知资源不放行。
 
-诊断报告在安装包目录生成，不包含完整游戏路径或账号信息。游戏写入前校验所有资源，写入前备份，写入失败尝试回滚。不修改游戏 DLL 或存档。
+恢复要求实际 Build 等于制作基准，或 FM27_Grok_InstallState.json 记录本安装器在同一 Build 见过全部匹配的干净原版资源。Build 再次变化使记录失效；没有证据时使用 Steam 验证恢复。
+
+Diagnostics 报告包含警告、资源判定与 canRestore。安装前备份，写入失败尝试回滚。不修改 DLL 或存档。

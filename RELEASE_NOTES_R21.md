@@ -1,3 +1,5 @@
+> 最新完整版本：[R2.2](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.2-test)。以下为历史版本说明。
+
 # R2.1 安装器兼容性修订（测试版）
 
 **现已提供完整安装包：** [FM27_Grok_26385295_R21_Test_NoHidden.zip](https://github.com/Rankf/FM27-Grok-R2/releases/download/r2.1-test/FM27_Grok_26385295_R21_Test_NoHidden.zip)。首次使用或升级都直接下载这一份，完整解压后运行 `Install.bat`。

@@ -3,7 +3,7 @@ $ErrorActionPreference='Stop'
 function Hash($p) { if(Test-Path -LiteralPath $p -PathType Leaf){$stream=[IO.File]::OpenRead($p);$algo=[Security.Cryptography.SHA256]::Create();try{([BitConverter]::ToString($algo.ComputeHash($stream))).Replace('-','').ToLower()}finally{$stream.Dispose();$algo.Dispose()}} else {''} }
 try {
  $manifest=Get-Content -LiteralPath "$PSScriptRoot\manifest.json" -Raw -Encoding UTF8 | ConvertFrom-Json
- Write-Host 'FM27 Grok - 正式版 Build 26385295 R2.1 测试适配包（不含隐藏属性补丁）' -ForegroundColor Cyan
+ Write-Host 'FM27 Grok - 基准 Build 26385295 R2.2 测试适配包（不含隐藏属性补丁）' -ForegroundColor Cyan
  if(!$GamePath){
   $candidates=@()
   $steam=(Get-ItemProperty 'HKCU:\Software\Valve\Steam' -ErrorAction SilentlyContinue).SteamPath
@@ -43,8 +43,9 @@ try {
  }
  if($actualBuild){Write-Host "实际 Steam Build: $actualBuild；安装包目标: $($manifest.build)"}
  else{Write-Host "实际 Steam Build: 未确认（$buildReason）"}
- $rows=@();$issues=@();$legacyFound=$false
- if($actualBuild -and $actualBuild -ne $manifest.build){$issues+='实际 Steam Build 与目标版本不同；请等待对应适配包。'}
+ $rows=@();$issues=@();$warnings=@();$legacyFound=$false
+ if($actualBuild -and $actualBuild -ne $manifest.build){$warnings+='实际 Build 与制作基准不同；不单凭版本号拒绝安装，将检查全部相关资源。通过资源校验不代表新版游戏内兼容性已经实测。'}
+ if(!$actualBuild){$warnings+='无法确认实际 Build；仅按资源校验判断安装，旧 Grok 升级仍需确认基准 Build。'}
  foreach($p in $manifest.files.PSObject.Properties){
   $n=$p.Name;$file=Join-Path $target $n;$h=Hash $file
   $state='未知文件';$allow=@($p.Value.accepted)+@($manifest.variants.fixed.$n,$manifest.variants.overlay.$n)
@@ -63,14 +64,31 @@ try {
  $styleState='目标原版';if($styleHash -ne $manifest.styleHash){$styleState='未知或缺失';$issues+='样式资源不是目标正式版；不能与旧版原始样式混用。'}
  $rows+=[pscustomobject]@{file=$styleName;state=$styleState;sha256=$styleHash;expectedOriginalSha256=$manifest.styleHash}
  foreach($row in $rows){Write-Host "$($row.state)：$($row.file)";if($row.state -eq '未知文件' -or $row.state -eq '未知或缺失'){Write-Host "  实际 SHA-256: $($row.sha256)";Write-Host "  目标原版 SHA-256: $($row.expectedOriginalSha256)"}}
- $report=[ordered]@{installerRevision='R2.1';targetBuild=$manifest.build;detectedBuild=$actualBuild;buildDetection=$buildReason;files=$rows;issues=$issues;canProceed=($issues.Count -eq 0);note='未知文件不能直接加入白名单；时间戳不能证明是哪个程序或补丁覆盖了文件。'}
+ # Restoring packaged originals requires either the baseline Build or evidence of
+ # clean original resources observed during installation on THIS actual Build.
+ $statePath=Join-Path $GamePath 'FM27_Grok_InstallState.json'
+ $verifiedOriginals=($actualBuild -ne '' -and @($rows | Where-Object {$_.state -ne '目标原版'}).Count -eq 0)
+ if(!$verifiedOriginals -and $actualBuild -and (Test-Path -LiteralPath $statePath)){
+  try{
+   $prior=Get-Content -LiteralPath $statePath -Raw -Encoding UTF8 | ConvertFrom-Json
+   $verifiedOriginals=($prior.actualBuild -eq $actualBuild -and $prior.verifiedOriginals -eq $true -and $prior.styleHash -eq $manifest.styleHash)
+   foreach($p in $manifest.files.PSObject.Properties){if($prior.originalHashes.($p.Name) -ne $p.Value.base){$verifiedOriginals=$false}}
+  }catch{$verifiedOriginals=$false}
+ }
+ $restoreAllowed=($issues.Count -eq 0 -and ($actualBuild -eq $manifest.build -or $verifiedOriginals))
+ $restoreReason=''
+ if(!$restoreAllowed){$restoreReason='不能确认本包原版适用于当前实际 Build；禁止跨版本写回。请使用 Steam 验证游戏文件完整性，或提供当前版本原版资源进行适配。'}
+ if($issues.Count -eq 0 -and !$restoreAllowed){$warnings+='可以按已识别资源安装，但尚无当前 Build 的干净原版记录，菜单3暂不可用；需要恢复时请使用Steam验证。'}
+ if($Action -eq 'restore' -and !$restoreAllowed -and $issues.Count -eq 0){$issues+=$restoreReason}
+ foreach($warning in $warnings){Write-Host "警告：$warning" -ForegroundColor Yellow}
+ $report=[ordered]@{installerRevision='R2.2';targetBuild=$manifest.build;detectedBuild=$actualBuild;buildDetection=$buildReason;files=$rows;issues=$issues;warnings=$warnings;action=$Action;canProceed=($issues.Count -eq 0);canRestore=$restoreAllowed;restoreReason=$restoreReason;verifiedOriginalsForCurrentBuild=$verifiedOriginals;note='Build变化先警告，资源未知仍停止；卸载恢复还要求实际Build或该Build的干净原版安装记录。'}
  try{
   $diag=Join-Path $PSScriptRoot 'Diagnostics';New-Item -ItemType Directory -Path $diag -Force | Out-Null
   $reportPath=Join-Path $diag ('compatibility_'+[DateTime]::Now.ToString('yyyyMMdd_HHmmss_fff')+'.json')
   $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $reportPath -Encoding UTF8
   Write-Host "诊断报告（可用于反馈）：$reportPath"
  }catch{Write-Host '无法在安装包目录写入报告，请复制上面的检查结果。'}
- if($issues.Count -gt 0){$issues | ForEach-Object {Write-Host $_ -ForegroundColor Yellow};throw '检查未通过，游戏文件未修改。请提供诊断报告。原版文件位于包内 originals，但只适用于目标 Build，不能跨版本强行覆盖。'}
+ if($issues.Count -gt 0){$issues | ForEach-Object {Write-Host $_ -ForegroundColor Yellow};throw '检查未通过，游戏文件未修改。请提供诊断报告。不能直接覆盖未知资源或未经确认的跨版本原版文件。'}
  if($legacyFound){Write-Host '已识别旧 Grok 文件，实际 Build 匹配；安装时会先备份，再替换为本包适配资源。' -ForegroundColor Green}
  if($Action -eq 'check'){Write-Host '资源校验通过。本次未修改任何游戏文件。' -ForegroundColor Green;exit 0}
  if(!$UserPath){$UserPath=Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'Sports Interactive\Football Manager 27'}
@@ -95,6 +113,8 @@ try {
  foreach($p in $manifest.files.PSObject.Properties){Copy-Item -LiteralPath (Join-Path $target $p.Name) -Destination "$backup\resources\$($p.Name)"}
  New-Item -ItemType Directory -Path "$backup\skin" -Force | Out-Null
  foreach($n in @('skin.json','grok.uss')){if(Test-Path -LiteralPath "$skin\$n"){Copy-Item -LiteralPath "$skin\$n" -Destination "$backup\skin\$n"}}
+ $hadState=Test-Path -LiteralPath $statePath -PathType Leaf
+ if($hadState){Copy-Item -LiteralPath $statePath -Destination "$backup\InstallState.json"}
  try {
   foreach($p in $manifest.files.PSObject.Properties){
    $n=$p.Name
@@ -108,9 +128,12 @@ try {
    New-Item -ItemType Directory -Path $skin -Force | Out-Null
    foreach($n in @('skin.json','grok.uss')){Copy-Item -LiteralPath "$sourceSkin\$n" -Destination "$skin\$n" -Force;if((Hash "$skin\$n") -ne (Hash "$sourceSkin\$n")){throw '皮肤文件校验失败'}}
   }
+  $originalHashes=[ordered]@{};foreach($p in $manifest.files.PSObject.Properties){$originalHashes[$p.Name]=$p.Value.base}
+  [ordered]@{installerRevision='R2.2';actualBuild=$actualBuild;verifiedOriginals=$verifiedOriginals;styleHash=$manifest.styleHash;originalHashes=$originalHashes;lastAction=$Action} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $statePath -Encoding UTF8
  } catch {
   foreach($p in $manifest.files.PSObject.Properties){Copy-Item -LiteralPath "$backup\resources\$($p.Name)" -Destination (Join-Path $target $p.Name) -Force}
   foreach($n in @('skin.json','grok.uss')){if(Test-Path -LiteralPath "$backup\skin\$n"){New-Item -ItemType Directory -Path $skin -Force | Out-Null;Copy-Item -LiteralPath "$backup\skin\$n" -Destination "$skin\$n" -Force}else{if(Test-Path -LiteralPath "$skin\$n"){Remove-Item -LiteralPath "$skin\$n"}}}
+  if($hadState){Copy-Item -LiteralPath "$backup\InstallState.json" -Destination $statePath -Force}else{if(Test-Path -LiteralPath $statePath -PathType Leaf){Remove-Item -LiteralPath $statePath}}
   throw
  }
  Write-Host "完成。操作前备份：$backup" -ForegroundColor Green

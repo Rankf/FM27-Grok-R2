@@ -1,0 +1,20 @@
+name: Publish verified R2.2 full package
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Fetch the requested repository commit
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth 1 origin "$GITHUB_SHA"
+          git checkout --detach FETCH_HEAD
+      - name: Reconstruct, verify, and upload the complete ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 release/build_full.py --recipe release/full-r22-recipe.json --publish

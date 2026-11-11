@@ -1,0 +1,19 @@
+{
+  "passed": [
+    "clean target build and read-only compatibility check",
+    "v2 fixed -> R2.2 install / reinstall / restore",
+    "v2 overlay -> R2.2 install / reinstall / restore",
+    "all unknown files reported; no game changes",
+    "missing file distinguished from modified file",
+    "changed Build with clean identical resources: warn, install, switch, evidence-based restore",
+    "changed Build with unknown resource: no writes",
+    "changed style still refused",
+    "old Grok upgrade on changed Build refused",
+    "known installed skin across Build: install allowed, old baseline restore refused",
+    "restoration evidence expires when Build changes again",
+    "unknown Build cannot restore from installed skin without evidence",
+    "legacy upgrade refused without a matching Steam manifest",
+    "write failure rolls resources and skin back",
+    "R2 UI and original resources unchanged"
+  ]
+}
