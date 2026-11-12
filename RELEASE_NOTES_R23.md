@@ -1,3 +1,5 @@
+> 最新完整版本：[R2.4](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.4-test)。
+
 # FM27 Grok R2.3 完整测试包
 
 本版增加两个可选模式，无需购买或开启游戏内修改器：

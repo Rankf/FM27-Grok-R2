@@ -1,5 +1,5 @@
 {
-  "build": "26385295",
+  "build": "26577676",
   "files": {
     "ui-datacollections_assets_all.bundle": {
       "base": "bc395f970c2bc63b9b666890f3d32d6eac90ef6565d638559c554f54d7c77f94",
@@ -124,25 +124,10 @@
   },
   "hiddenDll": {
     "relativePath": "fm_Data/Plugins/x86_64/game_plugin.dll",
-    "baseSha256": "f79b0a3413dd0e3f461b0afbc3ff397003f4a26d7525a30717428de6a8b91196",
-    "edits": [
-      {
-        "name": "CA",
-        "rva": 51267696,
-        "original": "0f847c1e0000",
-        "patched": "0f84851e0000",
-        "guardRva": 51267689,
-        "guard": "4181ff42414350"
-      },
-      {
-        "name": "PA",
-        "rva": 51273985,
-        "original": "0f84eb050000",
-        "patched": "0f84f4050000",
-        "guardRva": 51273978,
-        "guard": "4181ff42415050"
-      }
-    ]
+    "detection": "unique-shared-gate-v1",
+    "caGuard": "4181ff42414350",
+    "paGuard": "4181ff42415050",
+    "skipBytes": 9
   },
-  "installerRevision": "R2.3"
+  "installerRevision": "R2.4"
 }

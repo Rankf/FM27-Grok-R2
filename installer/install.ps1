@@ -1,17 +1,107 @@
 ﻿param([string]$GamePath='', [string]$UserPath='', [ValidateSet('','fixed','overlay','restore','check','ca','capa','hiddenoff')][string]$Action='', [string]$Resolution='')
 $ErrorActionPreference='Stop'
+if(-not('FmGrokSignatureScanner'-as[type])){
+ Add-Type -TypeDefinition @'
+using System;
+using System.Collections.Generic;
+using System.IO;
+public static class FmGrokSignatureScanner {
+ static int[] Prefix(byte[] pattern) {
+  int[] table = new int[pattern.Length];
+  for (int i = 1, j = 0; i < pattern.Length; i++) {
+   while (j > 0 && pattern[i] != pattern[j]) j = table[j - 1];
+   if (pattern[i] == pattern[j]) j++;
+   table[i] = j;
+  }
+  return table;
+ }
+ public static long[][] FindTwo(string path, byte[] first, byte[] second, long start, long length) {
+  var one = new List<long>(); var two = new List<long>();
+  int[] onePrefix = Prefix(first), twoPrefix = Prefix(second);
+  int oneState = 0, twoState = 0; long position = start;
+  using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+   stream.Position = start; byte[] buffer = new byte[4194304]; long remaining = length;
+   while (remaining > 0) {
+    int count = stream.Read(buffer, 0, (int)Math.Min(buffer.Length, remaining));
+    if (count <= 0) break;
+    for (int i = 0; i < count; i++, position++) {
+     byte value = buffer[i];
+     while (oneState > 0 && value != first[oneState]) oneState = onePrefix[oneState - 1];
+     if (value == first[oneState] && ++oneState == first.Length) { one.Add(position - first.Length + 1); oneState = onePrefix[oneState - 1]; }
+     while (twoState > 0 && value != second[twoState]) twoState = twoPrefix[twoState - 1];
+     if (value == second[twoState] && ++twoState == second.Length) { two.Add(position - second.Length + 1); twoState = twoPrefix[twoState - 1]; }
+    }
+    remaining -= count;
+   }
+  }
+  return new long[][] { one.ToArray(), two.ToArray() };
+ }
+}
+'@
+}
 function Hash($p) { if(Test-Path -LiteralPath $p -PathType Leaf){$stream=[IO.File]::OpenRead($p);$algo=[Security.Cryptography.SHA256]::Create();try{([BitConverter]::ToString($algo.ComputeHash($stream))).Replace('-','').ToLower()}finally{$stream.Dispose();$algo.Dispose()}} else {''} }
 function Hex([string]$s){$b=New-Object byte[] ($s.Length/2);for($i=0;$i -lt $b.Length;$i++){$b[$i]=[Convert]::ToByte($s.Substring($i*2,2),16)};return ,$b}
 function BytesEqual([byte[]]$a,[byte[]]$b){if($a.Length -ne $b.Length){return $false};for($i=0;$i -lt $a.Length;$i++){if($a[$i] -ne $b[$i]){return $false}};return $true}
 function ReadBytes([string]$p,[long]$offset,[int]$length){$s=[IO.File]::OpenRead($p);try{[void]$s.Seek($offset,'Begin');$b=New-Object byte[] $length;if($s.Read($b,0,$length) -ne $length){throw 'DLL读取长度不足'};return ,$b}finally{$s.Dispose()}}
 function PeSections([string]$p){$s=[IO.File]::OpenRead($p);try{$h=New-Object byte[] 8192;if($s.Read($h,0,$h.Length) -lt 1024){throw 'DLL文件过短'}}finally{$s.Dispose()};if($h[0]-ne 0x4d -or $h[1]-ne 0x5a){throw '不是PE文件'};$pe=[BitConverter]::ToInt32($h,0x3c);if([BitConverter]::ToUInt32($h,$pe)-ne 0x4550 -or [BitConverter]::ToUInt16($h,$pe+4)-ne 0x8664){throw '不是支持的64位PE文件'};$count=[BitConverter]::ToUInt16($h,$pe+6);$opt=[BitConverter]::ToUInt16($h,$pe+20);$base=$pe+24+$opt;$result=@();for($i=0;$i -lt $count;$i++){$o=$base+40*$i;$result+=,[pscustomobject]@{rva=[BitConverter]::ToUInt32($h,$o+12);size=[BitConverter]::ToUInt32($h,$o+16);raw=[BitConverter]::ToUInt32($h,$o+20);flags=[BitConverter]::ToUInt32($h,$o+36)}};return ,$result}
-function RvaToRaw($sections,[long]$rva,[int]$length){$hit=@($sections|Where-Object{($_.flags-band 0x20000000)-and $rva-ge$_.rva-and ($rva+$length)-le($_.rva+$_.size)});if($hit.Count-ne 1){throw "补丁位置不在唯一代码区：$rva"};return [long]($hit[0].raw+$rva-$hit[0].rva)}
-function NormalizedDllHash([string]$p,$edits){$sha=[Security.Cryptography.SHA256]::Create();$s=[IO.File]::OpenRead($p);try{$buf=New-Object byte[] 4194304;$position=[long]0;while(($n=$s.Read($buf,0,$buf.Length))-gt 0){foreach($e in $edits){for($i=0;$i-lt$e.original.Length;$i++){$q=$e.raw+$i-$position;if($q-ge 0-and$q-lt$n){$buf[$q]=$e.original[$i]}}};[void]$sha.TransformBlock($buf,0,$n,$null,0);$position+=$n};[void]$sha.TransformFinalBlock((New-Object byte[] 0),0,0);return (($sha.Hash|ForEach-Object{$_.ToString('x2')})-join'')}finally{$s.Dispose();$sha.Dispose()}}
-function DllState([string]$p,$profile){if(!(Test-Path -LiteralPath $p -PathType Leaf)){return [pscustomobject]@{state='missing';hash='';edits=@()}};$h=Hash $p;try{$sections=PeSections $p;$edits=@();foreach($e in $profile.edits){$original=Hex $e.original;$patched=Hex $e.patched;$guard=Hex $e.guard;$raw=RvaToRaw $sections ([long]$e.rva) $original.Length;$guardRaw=RvaToRaw $sections ([long]$e.guardRva) $guard.Length;if(!(BytesEqual (ReadBytes $p $guardRaw $guard.Length) $guard)){return [pscustomobject]@{state='unknown';hash=$h;edits=@()}};$current=ReadBytes $p $raw $original.Length;$on=BytesEqual $current $patched;$off=BytesEqual $current $original;if(!$on-and!$off){return [pscustomobject]@{state='unknown';hash=$h;edits=@()}};$edits+=,[pscustomobject]@{name=$e.name;raw=$raw;original=$original;patched=$patched;on=$on}};if((NormalizedDllHash $p $edits)-ne$profile.baseSha256){return [pscustomobject]@{state='unknown';hash=$h;edits=@()}};$ca=[bool](($edits|Where-Object{$_.name-eq'CA'}|Select-Object -First 1).on);$pa=[bool](($edits|Where-Object{$_.name-eq'PA'}|Select-Object -First 1).on);$state=if($ca-and$pa){'capa'}elseif($ca){'ca'}elseif($pa){'partial'}else{'original'};return [pscustomobject]@{state=$state;hash=$h;edits=$edits}}catch{return [pscustomobject]@{state='unknown';hash=$h;edits=@()}}}
+function TestHiddenGate([string]$p,[long]$raw){
+ if($raw-lt 0){return $false}
+ try{$b=ReadBytes $p $raw 19}catch{return $false}
+ return $b[0]-eq0x80-and$b[1]-eq0x3d-and$b[6]-eq0-and$b[7]-eq0x74-and$b[8]-eq0x0a-and$b[9]-eq0x45-and$b[10]-eq0x31-and$b[11]-eq0xf6-and$b[12]-eq0x31-and$b[13]-eq0xdb-and$b[14]-eq0xe9
+}
+function JumpBytes([long]$raw,[long]$target){
+ $distance=$target-($raw+6)
+ if($distance-lt[int]::MinValue-or$distance-gt[int]::MaxValue){throw '跳转距离超出范围'}
+ $result=New-Object byte[] 6;$result[0]=0x0f;$result[1]=0x84
+ [Array]::Copy([BitConverter]::GetBytes([int]$distance),0,$result,2,4)
+ return ,$result
+}
+function DllCandidates([string]$p,$locations,[int]$guardLength,[int]$skip){
+ $result=@()
+ foreach($guardRaw in $locations){
+  $jumpRaw=[long]$guardRaw+$guardLength;$jump=ReadBytes $p $jumpRaw 6
+  if($jump[0]-ne0x0f-or$jump[1]-ne0x84){continue}
+  $target=$jumpRaw+6+[BitConverter]::ToInt32($jump,2)
+  $gate=$null
+  if(TestHiddenGate $p $target){$gate=$target}
+  elseif(TestHiddenGate $p ($target-$skip)){$gate=$target-$skip}
+  if($null-ne$gate){$result+=,[pscustomobject]@{jumpRaw=$jumpRaw;gate=[long]$gate;target=[long]$target}}
+ }
+ return ,$result
+}
+function DllState([string]$p,$profile){
+ if(!(Test-Path -LiteralPath $p -PathType Leaf)){return [pscustomobject]@{state='missing';hash='';edits=@()}}
+ $h=Hash $p
+ try{
+  $sections=PeSections $p;$skip=[int]$profile.skipBytes;$caGuard=Hex $profile.caGuard;$paGuard=Hex $profile.paGuard
+  $caLocations=@();$paLocations=@()
+  foreach($section in $sections){
+   if(($section.flags-band 0x20000000)-and$section.size-ge$caGuard.Length){
+    $matches=[FmGrokSignatureScanner]::FindTwo($p,$caGuard,$paGuard,[long]$section.raw,[long]$section.size)
+    $caLocations+=@($matches[0]);$paLocations+=@($matches[1])
+   }
+  }
+  $ca=@(DllCandidates $p ($caLocations|Sort-Object -Unique) $caGuard.Length $skip)
+  $pa=@(DllCandidates $p ($paLocations|Sort-Object -Unique) $paGuard.Length $skip)
+  $pairs=@();foreach($c in $ca){foreach($a in $pa){if($c.gate-eq$a.gate){$pairs+=,[pscustomobject]@{CA=$c;PA=$a;gate=$c.gate}}}}
+  if($pairs.Count-ne 1){return [pscustomobject]@{state='unknown';hash=$h;edits=@();signaturePairs=$pairs.Count}}
+  $pair=$pairs[0];$edits=@()
+  foreach($name in @('CA','PA')){
+   $item=$pair.$name;$original=JumpBytes $item.jumpRaw $item.gate;$patched=JumpBytes $item.jumpRaw ($item.gate+$skip)
+   $on=$item.target-eq($item.gate+$skip)
+   if(!$on-and$item.target-ne$item.gate){return [pscustomobject]@{state='unknown';hash=$h;edits=@();signaturePairs=1}}
+   $edits+=,[pscustomobject]@{name=$name;raw=$item.jumpRaw;original=$original;patched=$patched;on=$on}
+  }
+  $caOn=[bool](($edits|Where-Object{$_.name-eq'CA'}|Select-Object -First 1).on)
+  $paOn=[bool](($edits|Where-Object{$_.name-eq'PA'}|Select-Object -First 1).on)
+  $state=if($caOn-and$paOn){'capa'}elseif($caOn){'ca'}elseif($paOn){'partial'}else{'original'}
+  return [pscustomobject]@{state=$state;hash=$h;edits=$edits;signaturePairs=1;gateRaw=$pair.gate}
+ }catch{return [pscustomobject]@{state='unknown';hash=$h;edits=@();signaturePairs=0}}
+}
 function SetDllMode([string]$p,$profile,[ValidateSet('original','ca','capa')][string]$mode){$before=DllState $p $profile;if($before.state-in@('missing','unknown')){throw '当前 game_plugin.dll 不受本补丁支持，未作修改'};$tmp=$p+'.fm27grok.tmp';$rollback=$p+'.fm27grok.rollback';if(Test-Path -LiteralPath $tmp){Remove-Item -LiteralPath $tmp -Force};if(Test-Path -LiteralPath $rollback){Remove-Item -LiteralPath $rollback -Force};try{Copy-Item -LiteralPath $p -Destination $tmp -Force;$s=[IO.File]::Open($tmp,'Open','ReadWrite');try{foreach($e in $before.edits){$enable=($e.name-eq'CA'-and$mode-in@('ca','capa'))-or($e.name-eq'PA'-and$mode-eq'capa');$bytes=if($enable){$e.patched}else{$e.original};[void]$s.Seek($e.raw,'Begin');$s.Write($bytes,0,$bytes.Length)};$s.Flush()}finally{$s.Dispose()};$expected=DllState $tmp $profile;if($expected.state-ne$mode){throw '补丁副本验证失败'};[IO.File]::Replace($tmp,$p,$rollback,$true);$after=DllState $p $profile;if($after.state-ne$mode){throw '替换后验证失败'};Remove-Item -LiteralPath $rollback -Force -ErrorAction SilentlyContinue;return $after}catch{if(Test-Path -LiteralPath $rollback){Copy-Item -LiteralPath $rollback -Destination $p -Force};throw}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue;Remove-Item -LiteralPath $rollback -Force -ErrorAction SilentlyContinue}}
 try {
  $manifest=Get-Content -LiteralPath "$PSScriptRoot\manifest.json" -Raw -Encoding UTF8 | ConvertFrom-Json
- Write-Host 'FM27 Grok - 基准 Build 26385295 R2.3 测试适配包（CA / CA+PA 可选）' -ForegroundColor Cyan
+ Write-Host 'FM27 Grok - 基准 Build 26577676 R2.4 测试适配包（CA / CA+PA 可选）' -ForegroundColor Cyan
  if(!$GamePath){
   $candidates=@()
   $steam=(Get-ItemProperty 'HKCU:\Software\Valve\Steam' -ErrorAction SilentlyContinue).SteamPath
@@ -33,7 +123,7 @@ try {
  if(!(Test-Path -LiteralPath $target)){throw '游戏目录不正确'}
  if(!$Action){
   Write-Host '1 固定侧边栏   2 浮动侧边栏   3 卸载并恢复正式版资源   4 只检查兼容性'
-  Write-Host '5 只显示真实 CA   6 显示真实 CA + PA   7 关闭 CA / PA 并恢复原版 DLL'
+  Write-Host '5 只显示真实 CA   6 显示真实 CA + PA   7 关闭 CA / PA 并恢复原始显示指令'
   switch(Read-Host '输入数字'){ '1'{$Action='fixed'} '2'{$Action='overlay'} '3'{$Action='restore'} '4'{$Action='check'} '5'{$Action='ca'} '6'{$Action='capa'} '7'{$Action='hiddenoff'} default {exit 0} }
  }
  # Read the appmanifest adjacent to this installation, rather than trusting the banner.
@@ -74,9 +164,9 @@ try {
  $rows+=[pscustomobject]@{file=$styleName;state=$styleState;sha256=$styleHash;expectedOriginalSha256=$manifest.styleHash}
  $dllPath=Join-Path $GamePath $manifest.hiddenDll.relativePath
  $dllState=DllState $dllPath $manifest.hiddenDll
- $dllLabel=switch($dllState.state){'original'{'关闭（原版）'}'ca'{'仅 CA'}'capa'{'CA + PA'}'partial'{'异常的仅 PA 状态'}'missing'{'缺失'}default{'未知或不兼容'}}
+ $dllLabel=switch($dllState.state){'original'{'关闭（原始显示指令）'}'ca'{'仅 CA'}'capa'{'CA + PA'}'partial'{'异常的仅 PA 状态'}'missing'{'缺失'}default{'未知或不兼容'}}
  Write-Host "CA/PA 补丁状态：$dllLabel；DLL SHA-256：$($dllState.hash)"
- if($Action-in@('ca','capa','hiddenoff')-and$dllState.state-in@('missing','unknown')){$issues+='当前 game_plugin.dll 与 R2.3 正式版补丁基准不匹配，拒绝修改。'}
+ if($Action-in@('ca','capa','hiddenoff')-and$dllState.state-in@('missing','unknown')){$issues+='无法唯一确认 CA、PA 与共同隐藏值分支，拒绝修改当前 game_plugin.dll。'}
  if($Action-in@('ca','capa')-and$dllState.state-eq'partial'){$issues+='检测到异常的仅 PA 状态；请先用菜单7恢复原版，再选择显示模式。'}
  foreach($row in $rows){Write-Host "$($row.state)：$($row.file)";if($row.state -eq '未知文件' -or $row.state -eq '未知或缺失'){Write-Host "  实际 SHA-256: $($row.sha256)";Write-Host "  目标原版 SHA-256: $($row.expectedOriginalSha256)"}}
  # Restoring packaged originals requires either the baseline Build or evidence of
@@ -96,7 +186,7 @@ try {
  if($issues.Count -eq 0 -and !$restoreAllowed){$warnings+='可以按已识别资源安装，但尚无当前 Build 的干净原版记录，菜单3暂不可用；需要恢复时请使用Steam验证。'}
  if($Action -eq 'restore' -and !$restoreAllowed -and $issues.Count -eq 0){$issues+=$restoreReason}
  foreach($warning in $warnings){Write-Host "警告：$warning" -ForegroundColor Yellow}
- $report=[ordered]@{installerRevision='R2.3';targetBuild=$manifest.build;detectedBuild=$actualBuild;buildDetection=$buildReason;files=$rows;hiddenDll=[ordered]@{state=$dllState.state;sha256=$dllState.hash};issues=$issues;warnings=$warnings;action=$Action;canProceed=($issues.Count -eq 0);canRestore=$restoreAllowed;restoreReason=$restoreReason;verifiedOriginalsForCurrentBuild=$verifiedOriginals;note='Build变化先警告，资源未知仍停止；CA/PA仅修改精确匹配的DLL，支持仅CA、CA+PA和恢复原版。'}
+ $report=[ordered]@{installerRevision='R2.4';targetBuild=$manifest.build;detectedBuild=$actualBuild;buildDetection=$buildReason;files=$rows;hiddenDll=[ordered]@{state=$dllState.state;sha256=$dllState.hash;signaturePairs=$dllState.signaturePairs;gateRaw=$dllState.gateRaw;detection=$manifest.hiddenDll.detection};issues=$issues;warnings=$warnings;action=$Action;canProceed=($issues.Count -eq 0);canRestore=$restoreAllowed;restoreReason=$restoreReason;verifiedOriginalsForCurrentBuild=$verifiedOriginals;note='UI资源未知仍停止；CA/PA按唯一代码结构识别，不再因整个DLL哈希变化而误拒绝。'}
  try{
   $diag=Join-Path $PSScriptRoot 'Diagnostics';New-Item -ItemType Directory -Path $diag -Force | Out-Null
   $reportPath=Join-Path $diag ('compatibility_'+[DateTime]::Now.ToString('yyyyMMdd_HHmmss_fff')+'.json')
@@ -113,7 +203,7 @@ try {
   $after=SetDllMode $dllPath $manifest.hiddenDll $mode
   if($mode-eq'ca'){Write-Host '完成：只显示真实 CA；PA 保持游戏原本隐藏规则。' -ForegroundColor Green}
   elseif($mode-eq'capa'){Write-Host '完成：显示真实 CA + PA。' -ForegroundColor Green}
-  else{Write-Host '完成：CA/PA 显示补丁已关闭，DLL 已恢复原版哈希。' -ForegroundColor Green}
+  else{Write-Host '完成：CA/PA 显示补丁已关闭，CA/PA 指令已恢复；DLL 其他内容保持不变。' -ForegroundColor Green}
   Write-Host '补丁只改变显示判断，不修改存档或球员能力值。请重新启动游戏。';exit 0
  }
  if(!$UserPath){$UserPath=Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'Sports Interactive\Football Manager 27'}
@@ -133,7 +223,7 @@ try {
   foreach($p in $manifest.skinHashes.PSObject.Properties){if((Hash (Join-Path $PSScriptRoot $p.Name)) -ne $p.Value){throw "皮肤文件损坏：$($p.Name)"}}
   foreach($p in $manifest.variants.$Action.PSObject.Properties){if((Hash "$PSScriptRoot\bundles\$Action\$($p.Name)") -ne $p.Value){throw "安装包损坏：$($p.Name)"}}
  }
- $backup=Join-Path $GamePath ('FM27_Grok_26385295_Backups\'+[DateTime]::Now.ToString('yyyyMMdd_HHmmss_fff'))
+ $backup=Join-Path $GamePath ('FM27_Grok_26577676_Backups\'+[DateTime]::Now.ToString('yyyyMMdd_HHmmss_fff'))
  New-Item -ItemType Directory -Path "$backup\resources" -Force | Out-Null
  foreach($p in $manifest.files.PSObject.Properties){Copy-Item -LiteralPath (Join-Path $target $p.Name) -Destination "$backup\resources\$($p.Name)"}
  New-Item -ItemType Directory -Path "$backup\skin" -Force | Out-Null
@@ -154,7 +244,7 @@ try {
    foreach($n in @('skin.json','grok.uss')){Copy-Item -LiteralPath "$sourceSkin\$n" -Destination "$skin\$n" -Force;if((Hash "$skin\$n") -ne (Hash "$sourceSkin\$n")){throw '皮肤文件校验失败'}}
   }
   $originalHashes=[ordered]@{};foreach($p in $manifest.files.PSObject.Properties){$originalHashes[$p.Name]=$p.Value.base}
-  [ordered]@{installerRevision='R2.3';actualBuild=$actualBuild;verifiedOriginals=$verifiedOriginals;styleHash=$manifest.styleHash;originalHashes=$originalHashes;lastAction=$Action} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $statePath -Encoding UTF8
+  [ordered]@{installerRevision='R2.4';actualBuild=$actualBuild;verifiedOriginals=$verifiedOriginals;styleHash=$manifest.styleHash;originalHashes=$originalHashes;lastAction=$Action} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $statePath -Encoding UTF8
   if($Action-eq'restore'-and$dllState.state-in@('ca','capa','partial')){[void](SetDllMode $dllPath $manifest.hiddenDll 'original')}
  } catch {
   foreach($p in $manifest.files.PSObject.Properties){Copy-Item -LiteralPath "$backup\resources\$($p.Name)" -Destination (Join-Path $target $p.Name) -Force}

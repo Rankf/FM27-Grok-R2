@@ -1,4 +1,4 @@
-> 最新完整版本：[R2.3](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.3-test)。以下为历史版本说明。
+> 最新完整版本：[R2.4](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.4-test)。以下为历史版本说明。
 
 # R2.1 安装器兼容性修订（测试版）
 

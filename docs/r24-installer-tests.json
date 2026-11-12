@@ -1,0 +1,33 @@
+{
+  "passed": [
+    "Steam Build 26577676 depot manifest: all 7 official UI resources unchanged and matched",
+    "clean target build and read-only compatibility check",
+    "v2 fixed -> R2.4 install / reinstall / restore",
+    "v2 overlay -> R2.4 install / reinstall / restore",
+    "all unknown UI resources reported; no game changes",
+    "missing UI resource distinguished from modified resource",
+    "changed Build with clean identical UI resources: warn and allow",
+    "changed Build with unknown UI resource: no writes",
+    "changed style still refused",
+    "old Grok upgrade on changed Build refused",
+    "known installed skin across Build allowed with guarded restore",
+    "restoration evidence expires when Build changes again",
+    "unknown Build cannot restore from installed skin without evidence",
+    "legacy upgrade refused without a matching Steam manifest",
+    "resource write failure rolls resources and skin back",
+    "R2 UI and original resources unchanged",
+    "Build 26385295 DLL uniquely resolves CA and PA to one shared hidden-value gate",
+    "Build 26577676 DLL uniquely resolves CA and PA to one shared hidden-value gate",
+    "old DLL: original -> CA-only -> original transition verified",
+    "new DLL: original -> CA-only -> CA+PA -> original transitions verified",
+    "unrelated DLL byte change no longer causes refusal and is preserved after restore",
+    "CA signature change is refused without further modification",
+    "menu 3 restoration returns recognized CA+PA instructions to their original state"
+  ],
+  "dllHashes": {
+    "build26385295Original": "f79b0a3413dd0e3f461b0afbc3ff397003f4a26d7525a30717428de6a8b91196",
+    "build26577676Original": "8c6971ce0b1c8afe6529ea3f46205a5175aea988a97d7421a980da42e23fe340",
+    "build26577676CaOnly": "6e600bfc8bc75680c865b0cb684a41558d9624500ff8b4a9eff36f8d2d259a92",
+    "build26577676CaAndPa": "0fb57e863f7b1c746f97d4f11da8fd50c73853cb73b4230830ac67d3994fbd7b"
+  }
+}
