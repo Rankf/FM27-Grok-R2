@@ -1,0 +1,30 @@
+{
+  "passed": [
+    "clean target build and read-only compatibility check",
+    "v2 fixed -> R2.3 install / reinstall / restore",
+    "v2 overlay -> R2.3 install / reinstall / restore",
+    "all unknown resources reported; no game changes",
+    "missing resource distinguished from modified resource",
+    "changed Build with clean identical resources: warn, install, switch, evidence-based restore",
+    "changed Build with unknown resource: no writes",
+    "changed style still refused",
+    "old Grok upgrade on changed Build refused",
+    "known installed skin across Build: install allowed, old baseline restore refused",
+    "restoration evidence expires when Build changes again",
+    "unknown Build cannot restore from installed skin without evidence",
+    "legacy upgrade refused without a matching Steam manifest",
+    "resource write failure rolls resources and skin back",
+    "R2 UI and original resources unchanged",
+    "formal-release DLL exact hash, PE section and CA/PA instruction guards verified",
+    "original DLL detected as CA/PA disabled",
+    "original -> CA-only -> CA+PA -> original transitions verified",
+    "CA-only mode leaves PA instruction original",
+    "unknown DLL byte change is refused without further modification",
+    "menu 3 restoration also returns a recognized CA+PA DLL to its original hash"
+  ],
+  "dllHashes": {
+    "original": "f79b0a3413dd0e3f461b0afbc3ff397003f4a26d7525a30717428de6a8b91196",
+    "caOnly": "77105500ecde9a65f0e62c0a1782752d133efc6a88fb06cb8bef00caee0c8906",
+    "caAndPa": "7b51dc914739352e85f4086e4b89804f2decffc6ba1b750edcd277f64e3aa40b"
+  }
+}

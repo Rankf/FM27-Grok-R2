@@ -1,3 +1,5 @@
+> 最新完整版本：[R2.3](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.3-test)。
+
 # FM27 Grok R2.2 完整测试包
 
 游戏更新不一定导致皮肤失效。R2.2 改为检查相关资源，不再仅因 Steam Build 不同而拒绝安装。

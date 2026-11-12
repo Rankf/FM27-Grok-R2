@@ -122,5 +122,27 @@
     "skins/FM27_grok_overlay_3840x2160/grok.uss": "76667852f0d74ce9981267db11e16358da6adb7bc3903a8479bf90ff17c94c77",
     "skins/FM27_grok_overlay_3840x2160/skin.json": "d3ba448a098626de2e945cf5a958065c346db7450cb867063e5254b71a469f1f"
   },
-  "installerRevision": "R2.2"
+  "hiddenDll": {
+    "relativePath": "fm_Data/Plugins/x86_64/game_plugin.dll",
+    "baseSha256": "f79b0a3413dd0e3f461b0afbc3ff397003f4a26d7525a30717428de6a8b91196",
+    "edits": [
+      {
+        "name": "CA",
+        "rva": 51267696,
+        "original": "0f847c1e0000",
+        "patched": "0f84851e0000",
+        "guardRva": 51267689,
+        "guard": "4181ff42414350"
+      },
+      {
+        "name": "PA",
+        "rva": 51273985,
+        "original": "0f84eb050000",
+        "patched": "0f84f4050000",
+        "guardRva": 51273978,
+        "guard": "4181ff42415050"
+      }
+    ]
+  },
+  "installerRevision": "R2.3"
 }

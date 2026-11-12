@@ -1,30 +1,32 @@
-# FM27 Grok R2.2 测试适配包
+# FM27 Grok R2.3 测试适配包
 
-游戏更新不一定导致皮肤失效。R2.2 改为检查相关资源，不再仅因 Steam Build 不同而拒绝安装。
+R2.3 在 R2.2 皮肤适配基础上增加两个独立可选显示模式：只显示真实 CA，或同时显示真实 CA + PA。无需购买或开启游戏内修改器。
 
 - Build 与制作基准 26385295 不同时先警告；相关资源全部匹配已识别状态，且样式一致，就允许安装。
 - 未知、缺失或不匹配的资源仍停止操作，不提供跳过全部检查的强制覆盖。
 - 旧 Grok v2.0 升级仍要求实际 Steam Build 为 26385295。
 - 菜单 3 恢复还需确认实际 Build 为制作基准，或本安装器曾在同一 Build 下记录全部干净原版资源与本包一致。游戏再次更新后，旧记录失效。无法确认时使用 Steam 验证游戏文件完整性恢复当前官方资源。
 - 菜单 4 只检查，输出警告、资源状态和是否可恢复，并生成 Diagnostics JSON 报告。
+- 菜单 5 只显示真实 CA，PA 继续遵循游戏原本的隐藏规则。
+- 菜单 6 同时显示真实 CA + PA；菜单 7 关闭该功能并将 DLL 恢复为原版哈希。
 
-这是完整包，包含安装器、两种侧栏、皮肤和原版资源。无需先安装 R2 或 R2.1，也无需另打补丁。完整解压、退出游戏后运行 Install.bat：1 固定侧栏，2 浮动侧栏，3 卸载恢复，4 只检查。安装完成后重启游戏并选择 FM27_grok。
+这是完整包，包含安装器、两种侧栏、皮肤和原版资源。无需先安装旧版本或另打补丁。完整解压并退出游戏后运行 Install.bat。先用菜单 1 或 2 安装皮肤，再按需要选择菜单 5 或 6。安装完成后重启游戏并选择 FM27_grok。
 
-不含隐藏属性补丁，不修改游戏 DLL 或存档。界面资源与 R2 相同；原皮肤的隐藏按钮或列可能仍可见。
+CA/PA 功能仅修改当前 Windows Steam 正式版 game_plugin.dll 中两处显示判断，不修改存档、球员能力值或其他隐藏属性。安装器同时检查完整 DLL 哈希、PE 代码区和邻近指令；不匹配会拒绝写入。游戏更新后皮肤资源可能仍兼容，但 CA/PA 补丁需要重新适配 DLL。
 
-15 项隔离目录模拟测试通过，包括新版号下资源一致的安装／切换／恢复、旧恢复记录失效、未知资源拦截和写入失败回滚。模拟新版号不等于实际未来更新已验证；本包仍未完成游戏内全面测试。
+21 项隔离测试通过，包括皮肤安装／切换／恢复、仅 CA、CA+PA、关闭恢复原版、未知 DLL 拒绝及写入失败回滚。代码和文件检查不等于游戏内全面测试。
 
 原皮肤由 Kwon（권순태）制作，其他贡献者及许可见包内原版_README.txt。本项目为非官方适配。
 
 ## 下载与校验
 
-[下载 R2.2 完整安装包](https://github.com/Rankf/FM27-Grok-R2/releases/download/r2.2-test/FM27_Grok_26385295_R22_Test_NoHidden.zip)。不要下载 GitHub 自动生成的 Source code ZIP。校验值见 [SHA256SUMS_R22_FULL.txt](SHA256SUMS_R22_FULL.txt)。
+[下载 R2.3 完整安装包](https://github.com/Rankf/FM27-Grok-R2/releases/download/r2.3-test/FM27_Grok_26385295_R23_Test_CA_Optional.zip)。不要下载 GitHub 自动生成的 Source code ZIP。校验值见 [SHA256SUMS_R23_FULL.txt](SHA256SUMS_R23_FULL.txt)。
 
 自动查找 Steam 安装目录；失败时输入包含 fm_Data 的目录。用户目录应为包含 games／skins 的实际文档目录，支持重定向文档目录。每次写入前备份；检查不会改动游戏文件。
 
 校验失败不等于游戏损坏。先保存 Diagnostics 报告，核对实际 Build 和此前补丁；Steam 验证只能恢复当前官方资源，不能保证恢复为本包制作基准。不要仅凭文件时间戳判断来源，也不要手动添加未知哈希。
 
-安装器源码见 [installer](installer)，模拟测试结果见 [r22-installer-tests.json](docs/r22-installer-tests.json)，基础资源来源核对见 [BASELINE_CHECK.md](docs/BASELINE_CHECK.md)。Xbox／Game Pass 等其他平台未验证。
+安装器源码见 [installer](installer)，模拟测试结果见 [r23-installer-tests.json](docs/r23-installer-tests.json)，基础资源来源核对见 [BASELINE_CHECK.md](docs/BASELINE_CHECK.md)。CA/PA 补丁不支持 Xbox／Game Pass。
 
 ## R2 界面修正
 
@@ -36,7 +38,7 @@
 
 - 资源封装与读回校验通过。
 - 在模拟目录中测试了安装、重复安装、侧栏切换、卸载、未知资源拒绝和写入失败后的回滚。
-- 安装器保持游戏 DLL 原样。
+- 默认安装皮肤不会修改 DLL；只有菜单 5、6、7 会操作受严格校验的 game_plugin.dll。
 - 2026-11-11：7 个基础资源与目标 Build 对应的本机 Steam 缓存下载清单逐项核对通过；这不是其他平台或后续版本的兼容认证。
 - **上述检查不等于游戏内实测。** 需要检查侧栏、球员及职员页、俱乐部历史、战术、比赛和存档载入。
 - 战术角色详细／简化说明及比赛 `OverviewHeader` 保留正式版对象，与原皮肤可能存在差异。
@@ -52,7 +54,7 @@
 - 安装包版本、选择的菜单项，以及完整报错文件名和文字。
 - 之前安装过的皮肤／比赛界面补丁，是否已验证游戏完整性。
 - 校验失败时，提供对应文件的 **SHA-256**。
-- R2.2 用户优先附上 `Diagnostics/compatibility_*.json` 报告，其中已包含上述版本和资源信息。
+- R2.3 用户优先附上 `Diagnostics/compatibility_*.json` 报告，其中包含资源和 DLL 状态。
 - 如果安装成功但显示异常，提供侧栏类型、游戏分辨率、Windows 缩放比例、复现步骤及截图。
 
 **查 Build ID：** 在该游戏所属 Steam 库的 `steamapps/appmanifest_4530370.acf` 中，用记事本查找 `"buildid"`，只需提供这一行。
