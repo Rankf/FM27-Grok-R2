@@ -1,0 +1,22 @@
+{
+  "passed": [
+    "clean target build and read-only compatibility check",
+    "v2 fixed -> R2.5.2 install / reinstall / restore with CRC catalog",
+    "v2 overlay -> R2.5.2 install / reinstall / restore with CRC catalog",
+    "published R2.5 fixed -> corrected R2.5.2 in-place upgrade with CRC catalog",
+    "published R2.5 overlay -> corrected R2.5.2 in-place upgrade with CRC catalog",
+    "all unknown files reported; no game changes",
+    "missing file distinguished from modified file",
+    "unknown Addressables catalog refused with no game changes",
+    "changed Build with clean identical resources: warn, install, switch, evidence-based restore",
+    "changed Build with unknown resource: no writes",
+    "changed style still refused",
+    "old Grok upgrade on changed Build refused",
+    "known installed skin across Build: install allowed, old baseline restore refused",
+    "restoration evidence expires when Build changes again",
+    "unknown Build cannot restore from installed skin without evidence",
+    "legacy upgrade refused without a matching Steam manifest",
+    "write failure rolls resources and skin back",
+    "Build 26620374 official originals and merged bundle structure verified"
+  ]
+}

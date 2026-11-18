@@ -129,6 +129,7 @@ try {
  $GamePath=[IO.Path]::GetFullPath($GamePath.Trim('"'))
  $target=Join-Path $GamePath 'fm_Data\StreamingAssets\aa\StandaloneWindows64'
  if(!(Test-Path -LiteralPath $target)){throw '游戏目录不正确'}
+ $catalogPath=Join-Path (Split-Path $target -Parent) 'catalog.bin'
  if(!$Action){
   Write-Host '1 固定侧边栏   2 浮动侧边栏   3 卸载并恢复正式版资源   4 只检查兼容性'
   Write-Host '5 只显示真实 CA   6 显示真实 CA + PA   7 关闭 CA / PA 并恢复原始显示指令'
@@ -167,6 +168,14 @@ try {
   $rows+=[pscustomobject]@{file=$n;state=$state;size=$bytes;sha256=$h;expectedOriginalSha256=$p.Value.base;originalInPackage="originals/$n"}
   if((Hash "$PSScriptRoot\originals\$n") -ne $p.Value.base){$issues+="安装包原始资源损坏：$n"}
  }
+ $catalogHash=Hash $catalogPath;$catalogState='未知或缺失'
+ $catalogAllow=@($manifest.catalog.variants.fixed,$manifest.catalog.variants.overlay)
+ if($catalogHash -eq $manifest.catalog.base){$catalogState='目标原版'}
+ elseif($catalogHash -in $catalogAllow){$catalogState='已识别适配包'}
+ else{$issues+='Addressables 目录 catalog.bin 未识别；不能保证修改后的 UI 资源通过 Unity CRC 校验。'}
+ $rows+=[pscustomobject]@{file='catalog.bin';state=$catalogState;size=$(if(Test-Path -LiteralPath $catalogPath){(Get-Item -LiteralPath $catalogPath).Length}else{$null});sha256=$catalogHash;expectedOriginalSha256=$manifest.catalog.base;originalInPackage='originals/catalog.bin'}
+ if((Hash "$PSScriptRoot\originals\catalog.bin") -ne $manifest.catalog.base){$issues+='安装包原始目录损坏：catalog.bin'}
+ foreach($variant in @('fixed','overlay')){if((Hash "$PSScriptRoot\catalogs\$variant\catalog.bin") -ne $manifest.catalog.variants.$variant){$issues+="安装包目录补丁损坏：catalog.bin ($variant)"}}
  $styleName='ui-styles_assets_default.bundle';$styleHash=Hash (Join-Path $target $styleName)
  $styleState='目标原版';if($styleHash -ne $manifest.styleHash){$styleState='未知或缺失';$issues+='样式资源不是目标正式版；不能与旧版原始样式混用。'}
  $rows+=[pscustomobject]@{file=$styleName;state=$styleState;sha256=$styleHash;expectedOriginalSha256=$manifest.styleHash}
@@ -186,6 +195,7 @@ try {
    $prior=Get-Content -LiteralPath $statePath -Raw -Encoding UTF8 | ConvertFrom-Json
    $verifiedOriginals=($prior.actualBuild -eq $actualBuild -and $prior.verifiedOriginals -eq $true -and $prior.styleHash -eq $manifest.styleHash)
    foreach($p in $manifest.files.PSObject.Properties){if($prior.originalHashes.($p.Name) -ne $p.Value.base){$verifiedOriginals=$false}}
+   if($prior.originalCatalogHash -ne $manifest.catalog.base){$verifiedOriginals=$false}
   }catch{$verifiedOriginals=$false}
  }
  $restoreAllowed=($issues.Count -eq 0 -and ($actualBuild -eq $manifest.build -or $verifiedOriginals))
@@ -194,7 +204,7 @@ try {
  if($issues.Count -eq 0 -and !$restoreAllowed){$warnings+='可以按已识别资源安装，但尚无当前 Build 的干净原版记录，菜单3暂不可用；需要恢复时请使用Steam验证。'}
  if($Action -eq 'restore' -and !$restoreAllowed -and $issues.Count -eq 0){$issues+=$restoreReason}
  foreach($warning in $warnings){Write-Host "警告：$warning" -ForegroundColor Yellow}
-$report=[ordered]@{installerRevision=$manifest.installerRevision;targetBuild=$manifest.build;detectedBuild=$actualBuild;buildDetection=$buildReason;files=$rows;hiddenDll=[ordered]@{state=$dllState.state;sha256=$dllState.hash;signaturePairs=$dllState.signaturePairs;gateRaw=$dllState.gateRaw;detection=$manifest.hiddenDll.detection};issues=$issues;warnings=$warnings;action=$Action;canProceed=($issues.Count -eq 0);canRestore=$restoreAllowed;restoreReason=$restoreReason;verifiedOriginalsForCurrentBuild=$verifiedOriginals;note='UI资源未知仍停止；CA/PA按唯一代码结构识别，不再因整个DLL哈希变化而误拒绝。'}
+$report=[ordered]@{installerRevision=$manifest.installerRevision;targetBuild=$manifest.build;detectedBuild=$actualBuild;buildDetection=$buildReason;files=$rows;hiddenDll=[ordered]@{state=$dllState.state;sha256=$dllState.hash;signaturePairs=$dllState.signaturePairs;gateRaw=$dllState.gateRaw;detection=$manifest.hiddenDll.detection};issues=$issues;warnings=$warnings;action=$Action;canProceed=($issues.Count -eq 0);canRestore=$restoreAllowed;restoreReason=$restoreReason;verifiedOriginalsForCurrentBuild=$verifiedOriginals;note='UI资源及Addressables目录未知仍停止；目录CRC随所选资源安装。CA/PA按唯一代码结构识别。'}
  try{
   $diag=Join-Path $PSScriptRoot 'Diagnostics';New-Item -ItemType Directory -Path $diag -Force | Out-Null
   $reportPath=Join-Path $diag ('compatibility_'+[DateTime]::Now.ToString('yyyyMMdd_HHmmss_fff')+'.json')
@@ -234,6 +244,8 @@ $report=[ordered]@{installerRevision=$manifest.installerRevision;targetBuild=$ma
  $backup=Join-Path $GamePath ('FM27_Grok_26620374_Backups\'+[DateTime]::Now.ToString('yyyyMMdd_HHmmss_fff'))
  New-Item -ItemType Directory -Path "$backup\resources" -Force | Out-Null
  foreach($p in $manifest.files.PSObject.Properties){Copy-Item -LiteralPath (Join-Path $target $p.Name) -Destination "$backup\resources\$($p.Name)"}
+ New-Item -ItemType Directory -Path "$backup\catalog" -Force | Out-Null
+ Copy-Item -LiteralPath $catalogPath -Destination "$backup\catalog\catalog.bin"
  New-Item -ItemType Directory -Path "$backup\skin" -Force | Out-Null
  foreach($n in @('skin.json','grok.uss')){if(Test-Path -LiteralPath "$skin\$n"){Copy-Item -LiteralPath "$skin\$n" -Destination "$backup\skin\$n"}}
  $hadState=Test-Path -LiteralPath $statePath -PathType Leaf
@@ -245,6 +257,9 @@ $report=[ordered]@{installerRevision=$manifest.installerRevision;targetBuild=$ma
    Copy-Item -LiteralPath $src -Destination (Join-Path $target $n) -Force
    if((Hash (Join-Path $target $n)) -ne $want){throw "写入校验失败 $n"}
   }
+  if($Action -eq 'restore'){$catalogSource="$PSScriptRoot\originals\catalog.bin";$catalogWant=$manifest.catalog.base}else{$catalogSource="$PSScriptRoot\catalogs\$Action\catalog.bin";$catalogWant=$manifest.catalog.variants.$Action}
+  Copy-Item -LiteralPath $catalogSource -Destination $catalogPath -Force
+  if((Hash $catalogPath) -ne $catalogWant){throw '写入校验失败 catalog.bin'}
   if($Action -eq 'restore'){
    foreach($n in @('skin.json','grok.uss')){if(Test-Path -LiteralPath "$skin\$n"){Remove-Item -LiteralPath "$skin\$n"}}
   }else{
@@ -252,10 +267,11 @@ $report=[ordered]@{installerRevision=$manifest.installerRevision;targetBuild=$ma
    foreach($n in @('skin.json','grok.uss')){Copy-Item -LiteralPath "$sourceSkin\$n" -Destination "$skin\$n" -Force;if((Hash "$skin\$n") -ne (Hash "$sourceSkin\$n")){throw '皮肤文件校验失败'}}
   }
   $originalHashes=[ordered]@{};foreach($p in $manifest.files.PSObject.Properties){$originalHashes[$p.Name]=$p.Value.base}
-  [ordered]@{installerRevision=$manifest.installerRevision;actualBuild=$actualBuild;verifiedOriginals=$verifiedOriginals;styleHash=$manifest.styleHash;originalHashes=$originalHashes;lastAction=$Action} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $statePath -Encoding UTF8
+  [ordered]@{installerRevision=$manifest.installerRevision;actualBuild=$actualBuild;verifiedOriginals=$verifiedOriginals;styleHash=$manifest.styleHash;originalHashes=$originalHashes;originalCatalogHash=$manifest.catalog.base;lastAction=$Action} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $statePath -Encoding UTF8
   if($Action-eq'restore'-and$dllState.state-in@('ca','capa','partial')){[void](SetDllMode $dllPath $manifest.hiddenDll 'original')}
  } catch {
   foreach($p in $manifest.files.PSObject.Properties){Copy-Item -LiteralPath "$backup\resources\$($p.Name)" -Destination (Join-Path $target $p.Name) -Force}
+  Copy-Item -LiteralPath "$backup\catalog\catalog.bin" -Destination $catalogPath -Force
   foreach($n in @('skin.json','grok.uss')){if(Test-Path -LiteralPath "$backup\skin\$n"){New-Item -ItemType Directory -Path $skin -Force | Out-Null;Copy-Item -LiteralPath "$backup\skin\$n" -Destination "$skin\$n" -Force}else{if(Test-Path -LiteralPath "$skin\$n"){Remove-Item -LiteralPath "$skin\$n"}}}
   if($hadState){Copy-Item -LiteralPath "$backup\InstallState.json" -Destination $statePath -Force}else{if(Test-Path -LiteralPath $statePath -PathType Leaf){Remove-Item -LiteralPath $statePath}}
   throw

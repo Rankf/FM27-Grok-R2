@@ -133,5 +133,85 @@
     "paGuard": "4181ff42415050",
     "skipBytes": 9
   },
-  "installerRevision": "R2.5.1"
+  "installerRevision": "R2.5.2",
+  "catalog": {
+    "relativePath": "fm_Data/StreamingAssets/aa/catalog.bin",
+    "base": "7e83abcb289a0401504faf6a6f7dbe092c6663670155962a4576bcc1101ab12d",
+    "variants": {
+      "fixed": "42de1f689d7a07627901af7c4b7f1c34ea641caca85193b79d3b79a0a77f9380",
+      "overlay": "96b1402147652fb5cd7ac2b4f8beb8e9b90340b04528baf1a032c0d86e417382"
+    },
+    "records": [
+      {
+        "name": "ui-datacollections_assets_all.bundle",
+        "originalCrc": 2980233661,
+        "originalSize": 145994,
+        "catalogOffset": 397996,
+        "fixedCrc": 756995306,
+        "fixedSize": 146728,
+        "overlayCrc": 756995306,
+        "overlaySize": 146728
+      },
+      {
+        "name": "ui-tablefactories_assets_all.bundle",
+        "originalCrc": 3638037946,
+        "originalSize": 186035,
+        "catalogOffset": 410190,
+        "fixedCrc": 2490620009,
+        "fixedSize": 188085,
+        "overlayCrc": 2490620009,
+        "overlaySize": 188085
+      },
+      {
+        "name": "ui-tableviews_assets_all.bundle",
+        "originalCrc": 2043102592,
+        "originalSize": 359788,
+        "catalogOffset": 410462,
+        "fixedCrc": 129563893,
+        "fixedSize": 363812,
+        "overlayCrc": 129563893,
+        "overlaySize": 363812
+      },
+      {
+        "name": "ui-tileslayouts_assets_all.bundle",
+        "originalCrc": 961124700,
+        "originalSize": 933527,
+        "catalogOffset": 411896,
+        "fixedCrc": 3793157531,
+        "fixedSize": 941547,
+        "overlayCrc": 3793157531,
+        "overlaySize": 941547
+      },
+      {
+        "name": "ui-visualtreeassets_assets_gameworldvisualtreeassetpreload.bundle",
+        "originalCrc": 259756004,
+        "originalSize": 9333802,
+        "catalogOffset": 412864,
+        "fixedCrc": 223820926,
+        "fixedSize": 9451868,
+        "overlayCrc": 3935937529,
+        "overlaySize": 9449929
+      },
+      {
+        "name": "ui-visualtreeassets_assets_globalvisualtreeassetpreload.bundle",
+        "originalCrc": 1117165080,
+        "originalSize": 3714885,
+        "catalogOffset": 413198,
+        "fixedCrc": 2362557671,
+        "fixedSize": 3760091,
+        "overlayCrc": 2362557671,
+        "overlaySize": 3760091
+      },
+      {
+        "name": "ui-visualtreeassets_assets_matchvisualtreeassetpreload.bundle",
+        "originalCrc": 1704242069,
+        "originalSize": 539034,
+        "catalogOffset": 414192,
+        "fixedCrc": 1401104539,
+        "fixedSize": 556168,
+        "overlayCrc": 1401104539,
+        "overlaySize": 556168
+      }
+    ]
+  }
 }
