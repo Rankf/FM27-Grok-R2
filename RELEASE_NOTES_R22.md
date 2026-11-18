@@ -1,4 +1,4 @@
-> 最新完整版本：[R2.4](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.4-test)。
+> 最新完整版本：[R2.5](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.5-test)。
 
 # FM27 Grok R2.2 完整测试包
 

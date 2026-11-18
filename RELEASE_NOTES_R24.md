@@ -1,3 +1,5 @@
+> 最新完整版本：[R2.5](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.5-test)。
+
 # FM27 Grok R2.4 完整测试包
 
 本版面向 Windows Steam Build 26577676。Steam 新清单复核表明，皮肤使用的7个官方 UI 资源与上一正式版逐项相同，因此界面资源无需重新移植。
