@@ -1,0 +1,103 @@
+{
+  "passed": true,
+  "reports": [
+    {
+      "file": "ui-datacollections_assets_all.bundle",
+      "sheets": 0,
+      "handles": 0,
+      "invalid": [],
+      "variant": "fixed"
+    },
+    {
+      "file": "ui-tablefactories_assets_all.bundle",
+      "sheets": 0,
+      "handles": 0,
+      "invalid": [],
+      "variant": "fixed"
+    },
+    {
+      "file": "ui-tableviews_assets_all.bundle",
+      "sheets": 0,
+      "handles": 0,
+      "invalid": [],
+      "variant": "fixed"
+    },
+    {
+      "file": "ui-tileslayouts_assets_all.bundle",
+      "sheets": 0,
+      "handles": 0,
+      "invalid": [],
+      "variant": "fixed"
+    },
+    {
+      "file": "ui-visualtreeassets_assets_gameworldvisualtreeassetpreload.bundle",
+      "sheets": 5113,
+      "handles": 62504,
+      "invalid": [],
+      "variant": "fixed"
+    },
+    {
+      "file": "ui-visualtreeassets_assets_globalvisualtreeassetpreload.bundle",
+      "sheets": 1993,
+      "handles": 23078,
+      "invalid": [],
+      "variant": "fixed"
+    },
+    {
+      "file": "ui-visualtreeassets_assets_matchvisualtreeassetpreload.bundle",
+      "sheets": 244,
+      "handles": 7866,
+      "invalid": [],
+      "variant": "fixed"
+    },
+    {
+      "file": "ui-datacollections_assets_all.bundle",
+      "sheets": 0,
+      "handles": 0,
+      "invalid": [],
+      "variant": "overlay"
+    },
+    {
+      "file": "ui-tablefactories_assets_all.bundle",
+      "sheets": 0,
+      "handles": 0,
+      "invalid": [],
+      "variant": "overlay"
+    },
+    {
+      "file": "ui-tableviews_assets_all.bundle",
+      "sheets": 0,
+      "handles": 0,
+      "invalid": [],
+      "variant": "overlay"
+    },
+    {
+      "file": "ui-tileslayouts_assets_all.bundle",
+      "sheets": 0,
+      "handles": 0,
+      "invalid": [],
+      "variant": "overlay"
+    },
+    {
+      "file": "ui-visualtreeassets_assets_gameworldvisualtreeassetpreload.bundle",
+      "sheets": 5113,
+      "handles": 62504,
+      "invalid": [],
+      "variant": "overlay"
+    },
+    {
+      "file": "ui-visualtreeassets_assets_globalvisualtreeassetpreload.bundle",
+      "sheets": 1993,
+      "handles": 23078,
+      "invalid": [],
+      "variant": "overlay"
+    },
+    {
+      "file": "ui-visualtreeassets_assets_matchvisualtreeassetpreload.bundle",
+      "sheets": 244,
+      "handles": 7866,
+      "invalid": [],
+      "variant": "overlay"
+    }
+  ]
+}

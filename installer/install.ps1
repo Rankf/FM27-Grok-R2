@@ -169,7 +169,7 @@ try {
   if((Hash "$PSScriptRoot\originals\$n") -ne $p.Value.base){$issues+="安装包原始资源损坏：$n"}
  }
  $catalogHash=Hash $catalogPath;$catalogState='未知或缺失'
- $catalogAllow=@($manifest.catalog.variants.fixed,$manifest.catalog.variants.overlay)
+ $catalogAllow=@($manifest.catalog.accepted)+@($manifest.catalog.variants.fixed,$manifest.catalog.variants.overlay)
  if($catalogHash -eq $manifest.catalog.base){$catalogState='目标原版'}
  elseif($catalogHash -in $catalogAllow){$catalogState='已识别适配包'}
  else{$issues+='Addressables 目录 catalog.bin 未识别；不能保证修改后的 UI 资源通过 Unity CRC 校验。'}

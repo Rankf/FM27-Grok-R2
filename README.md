@@ -1,6 +1,6 @@
-# FM27 Grok R2.5.2 测试适配包
+# FM27 Grok R2.5.3 测试适配包
 
-R2.5.2 面向 Steam Build 26620374，修复 R2.5／R2.5.1 修改过的 UI AssetBundle 因 `catalog.bin` 仍保存官方原版 CRC 而被 Unity 拒绝加载的问题。战术板头像、侧栏和其他 Grok 节点虽然已经写入文件，但相关 bundle 启动时会出现 `CRC Mismatch` 并被整包跳过；本版为固定／浮动资源分别附带匹配的 Addressables 目录，并将目录纳入校验、备份、切换、卸载和失败回滚。无需购买或开启游戏内修改器。
+R2.5.3 面向 Steam Build 26620374，修复 R2.5.2 通过 CRC 后战术板头像仍不显示的问题。进入战术页后的运行日志证明，皮肤规则虽然已迁移到新版规则编号，但规则内部的尺寸、枚举等 `StyleValueHandle` 仍使用旧数组索引，Unity 因此连续记录 `Accessing invalid property` 并跳过头像布局。本版按实际值重新定位规则内部句柄，并对固定／浮动两套全部内联样式表做越界检查。无需购买或开启游戏内修改器。
 
 - Build 与制作基准 26620374 不同时先警告；相关资源全部匹配已识别状态，且样式一致，就允许安装。
 - 未知、缺失或不匹配的资源仍停止操作，不提供跳过全部检查的强制覆盖。
@@ -22,19 +22,19 @@ CA/PA 功能仅修改 Windows Steam game_plugin.dll 中两处显示判断，不�
 
 CA/PA 补丁按 PE 代码结构识别，不依赖电脑或整个 DLL SHA-256；其他补丁只要没有改动同一 CA/PA 结构，就会被保留。Xbox／Game Pass 未验证。备份和 FM27_Grok_InstallState.json 属于各自电脑，不能跨电脑作为恢复记录使用。
 
-18 项安装器回归流程及资源结构检查通过，包括 CRC 目录同步、未知目录拒绝、旧版原地升级、固定／浮动切换、Steam 清单来源、仅 CA、CA+PA、恢复、无关 DLL 修改保留，以及皮肤安装与失败回滚。R2.5.2 还实际启动 FM 至主窗口复验，原先 6 条 `CRC Mismatch / Will not load AssetBundle` 与样式索引异常均已消失；仍需人工检查所有游戏页面。
+20 项安装器回归流程及资源结构检查通过，包括从 R2.5.2 两种侧栏原地升级、CRC 目录迁移、未知目录拒绝、固定／浮动切换、Steam 清单来源、仅 CA、CA+PA、恢复、无关 DLL 修改保留，以及皮肤安装与失败回滚。固定／浮动两套共扫描 14,698 张内联样式表、186,896 个句柄，越界为 0。2026-11-18 实际进入同一存档战术页复验，球员头像恢复显示，运行日志中 CRC 与无效样式属性错误均为 0。
 
 原皮肤由 Kwon（권순태）制作，其他贡献者及许可见包内原版_README.txt。本项目为非官方适配。
 
 ## 下载与校验
 
-[下载 R2.5.2 完整安装包](https://github.com/Rankf/FM27-Grok-R2/releases/download/r2.5.2-test/FM27_Grok_26620374_R252_Test_CA_Optional.zip)。不要下载 GitHub 自动生成的 Source code ZIP。校验值见 [SHA256SUMS_R252_FULL.txt](SHA256SUMS_R252_FULL.txt)。已安装 R2.5／R2.5.1 的用户可直接运行本包菜单 1 或 2 覆盖升级，无需先恢复或验证游戏文件。
+[下载 R2.5.3 完整安装包](https://github.com/Rankf/FM27-Grok-R2/releases/download/r2.5.3-test/FM27_Grok_26620374_R253_Test_CA_Optional.zip)。不要下载 GitHub 自动生成的 Source code ZIP。校验值见 [SHA256SUMS_R253_FULL.txt](SHA256SUMS_R253_FULL.txt)。已安装 R2.5／R2.5.1／R2.5.2 的用户可直接运行本包菜单 1 或 2 覆盖升级，无需先恢复或验证游戏文件。
 
 自动查找 Steam 安装目录；失败时输入包含 fm_Data 的目录。用户目录应为包含 games／skins 的实际文档目录，支持重定向文档目录。每次写入前备份；检查不会改动游戏文件。
 
 校验失败不等于游戏损坏。先保存 Diagnostics 报告，核对实际 Build 和此前补丁；Steam 验证只能恢复当前官方资源，不能保证恢复为本包制作基准。不要仅凭文件时间戳判断来源，也不要手动添加未知哈希。
 
-安装器源码见 [installer](installer)，模拟测试结果见 [r252-installer-tests.json](docs/r252-installer-tests.json)，基础资源来源核对见 [BASELINE_CHECK.md](docs/BASELINE_CHECK.md)。CA/PA 补丁不支持 Xbox／Game Pass。
+安装器源码见 [installer](installer)，模拟测试结果见 [r253-installer-tests.json](docs/r253-installer-tests.json)，样式句柄扫描见 [r253-style-handle-validation.json](docs/r253-style-handle-validation.json)，基础资源来源核对见 [BASELINE_CHECK.md](docs/BASELINE_CHECK.md)。CA/PA 补丁不支持 Xbox／Game Pass。
 
 ## R2 界面修正
 
@@ -44,10 +44,13 @@ R2.5.1 除了重新分配与校验托管引用，还会把每个 Grok 元素的�
 
 R2.5.2 进一步同步修改 Addressables 二进制目录中的 7 组 Unity CRC 和 bundle 大小。安装器要求 bundle 与目录属于同一变体，避免出现“SHA-256 校验通过但 Unity 仍拒绝加载”的混合状态。
 
+R2.5.3 将每条保留的皮肤规则内部句柄按实际值重新映射到新版 `floats`、`dimensions`、`colors`、`strings` 等数组。两张早期 R2/R2.4 基础包中已经损坏、且父界面没有皮肤改动的独立样式表改为保留本 Build 官方版本，不再传播历史损坏。
+
 ## 验证与限制
 
 - 资源封装与读回校验通过。
 - 修改后 bundle 的 Unity 解压内容 CRC 与所带 `catalog.bin` 逐项一致；实际启动日志未再出现资源包 CRC 拒载。
+- 固定／浮动两套所有受支持的内联样式句柄均在对应数组范围内；战术组合卡原先越界的尺寸 16–18 与枚举 6 已按实际值重定位。
 - 在模拟目录中测试了安装、重复安装、侧栏切换、卸载、未知资源拒绝和写入失败后的回滚。
 - 默认安装皮肤不会修改 DLL；只有菜单 5、6、7 会操作受严格校验的 game_plugin.dll。
 - 2026-11-18：Build 26620374 的 7 个基础资源及样式资源与 Steam Depot 清单逐项核对通过；这不是其他平台或后续版本的兼容认证。
@@ -65,7 +68,7 @@ R2.5.2 进一步同步修改 Addressables 二进制目录中的 7 组 Unity CRC 
 - 安装包版本、选择的菜单项，以及完整报错文件名和文字。
 - 之前安装过的皮肤／比赛界面补丁，是否已验证游戏完整性。
 - 校验失败时，提供对应文件的 **SHA-256**。
-- R2.5.2 用户优先附上 `Diagnostics/compatibility_*.json` 报告，其中包含 bundle、`catalog.bin`、DLL 状态、结构匹配数量和共同分支位置。
+- R2.5.3 用户优先附上 `Diagnostics/compatibility_*.json` 报告，其中包含 bundle、`catalog.bin`、DLL 状态、结构匹配数量和共同分支位置。
 - 如果安装成功但显示异常，提供侧栏类型、游戏分辨率、Windows 缩放比例、复现步骤及截图。
 
 **查 Build ID：** 在该游戏所属 Steam 库的 `steamapps/appmanifest_4530370.acf` 中，用记事本查找 `"buildid"`，只需提供这一行。
