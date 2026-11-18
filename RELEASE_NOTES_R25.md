@@ -1,5 +1,7 @@
 # FM27 Grok R2.5 完整测试包
 
+> 此版本存在内联样式索引迁移缺陷，可能导致固定侧栏不显示。请改用 [R2.5.1 完整修正版](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.5.1-test)，可直接覆盖升级。
+
 本版面向 Windows Steam Build 26620374。该更新实际修改了全部 7 个相关 UI bundle、样式 bundle 和 game_plugin.dll，不能通过增加 Hash 白名单解决。
 
 R2.5 完成以下适配：

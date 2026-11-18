@@ -1,6 +1,6 @@
-# FM27 Grok R2.5 测试适配包
+# FM27 Grok R2.5.1 测试适配包
 
-R2.5 面向 Steam Build 26620374。该更新实际修改了全部 7 个相关 UI bundle 和样式 bundle；R2.5 将 Grok 改动三方合并到新版官方对象，并处理新版序列化字段与托管引用编号冲突。无需购买或开启游戏内修改器。
+R2.5.1 面向 Steam Build 26620374，是 R2.5 的侧栏显示修正版。R2.5 首次合并时，官方资源删除的一条内联样式规则令后续规则整体前移，但皮肤新增节点仍使用旧索引，导致固定侧栏不显示；R2.5.1 会跟踪每条皮肤样式的新位置，并同步修正导航、资料页和比赛界面中的同类问题。无需购买或开启游戏内修改器。
 
 - Build 与制作基准 26620374 不同时先警告；相关资源全部匹配已识别状态，且样式一致，就允许安装。
 - 未知、缺失或不匹配的资源仍停止操作，不提供跳过全部检查的强制覆盖。
@@ -22,25 +22,25 @@ CA/PA 功能仅修改 Windows Steam game_plugin.dll 中两处显示判断，不�
 
 CA/PA 补丁按 PE 代码结构识别，不依赖电脑或整个 DLL SHA-256；其他补丁只要没有改动同一 CA/PA 结构，就会被保留。Xbox／Game Pass 未验证。备份和 FM27_Grok_InstallState.json 属于各自电脑，不能跨电脑作为恢复记录使用。
 
-25 项隔离检查通过，包括新资源三方合并、托管引用与侧栏结构、Steam 清单来源、仅 CA、CA+PA、占用文件重试、恢复、无关 DLL 修改保留，以及皮肤安装与失败回滚。代码和文件检查不等于游戏内全面测试。
+28 项隔离检查通过，包括新资源三方合并、托管引用与侧栏结构、内联样式索引迁移、已发布 R2.5 两种侧栏的原地升级、Steam 清单来源、仅 CA、CA+PA、占用文件重试、恢复、无关 DLL 修改保留，以及皮肤安装与失败回滚。代码和文件检查不等于游戏内全面测试。
 
 原皮肤由 Kwon（권순태）制作，其他贡献者及许可见包内原版_README.txt。本项目为非官方适配。
 
 ## 下载与校验
 
-[下载 R2.5 完整安装包](https://github.com/Rankf/FM27-Grok-R2/releases/download/r2.5-test/FM27_Grok_26620374_R25_Test_CA_Optional.zip)。不要下载 GitHub 自动生成的 Source code ZIP。校验值见 [SHA256SUMS_R25_FULL.txt](SHA256SUMS_R25_FULL.txt)。
+[下载 R2.5.1 完整安装包](https://github.com/Rankf/FM27-Grok-R2/releases/download/r2.5.1-test/FM27_Grok_26620374_R251_Test_CA_Optional.zip)。不要下载 GitHub 自动生成的 Source code ZIP。校验值见 [SHA256SUMS_R251_FULL.txt](SHA256SUMS_R251_FULL.txt)。已安装 R2.5 的用户可直接运行本包菜单 1 或 2 覆盖升级，无需先恢复或验证游戏文件。
 
 自动查找 Steam 安装目录；失败时输入包含 fm_Data 的目录。用户目录应为包含 games／skins 的实际文档目录，支持重定向文档目录。每次写入前备份；检查不会改动游戏文件。
 
 校验失败不等于游戏损坏。先保存 Diagnostics 报告，核对实际 Build 和此前补丁；Steam 验证只能恢复当前官方资源，不能保证恢复为本包制作基准。不要仅凭文件时间戳判断来源，也不要手动添加未知哈希。
 
-安装器源码见 [installer](installer)，模拟测试结果见 [r25-installer-tests.json](docs/r25-installer-tests.json)，基础资源来源核对见 [BASELINE_CHECK.md](docs/BASELINE_CHECK.md)。CA/PA 补丁不支持 Xbox／Game Pass。
+安装器源码见 [installer](installer)，模拟测试结果见 [r251-installer-tests.json](docs/r251-installer-tests.json)，基础资源来源核对见 [BASELINE_CHECK.md](docs/BASELINE_CHECK.md)。CA/PA 补丁不支持 Xbox／Game Pass。
 
 ## R2 界面修正
 
 原皮肤将 `XGTableTile_8x4` 资源改造成浮动侧栏。首个测试适配包误保留了原版表格，导致侧栏展开后出现 XG TABLE。R2 恢复了完整侧栏，并迁移正式版新增字段。
 
-R2.5 对新版对象重新分配与校验托管引用，已检查固定／浮动侧栏菜单、展开按钮的目标资源、内联样式引用及全部新增官方对象。
+R2.5.1 除了重新分配与校验托管引用，还会把每个 Grok 元素的内联样式索引映射到新版规则表中的实际位置。固定侧栏根节点已从失效的规则 48 改到正确的规则 47，并逐项比较规则内容，而不是只检查节点名称存在。
 
 ## 验证与限制
 
@@ -62,7 +62,7 @@ R2.5 对新版对象重新分配与校验托管引用，已检查固定／浮动
 - 安装包版本、选择的菜单项，以及完整报错文件名和文字。
 - 之前安装过的皮肤／比赛界面补丁，是否已验证游戏完整性。
 - 校验失败时，提供对应文件的 **SHA-256**。
-- R2.5 用户优先附上 `Diagnostics/compatibility_*.json` 报告，其中包含资源、DLL 状态、结构匹配数量和共同分支位置。
+- R2.5.1 用户优先附上 `Diagnostics/compatibility_*.json` 报告，其中包含资源、DLL 状态、结构匹配数量和共同分支位置。
 - 如果安装成功但显示异常，提供侧栏类型、游戏分辨率、Windows 缩放比例、复现步骤及截图。
 
 **查 Build ID：** 在该游戏所属 Steam 库的 `steamapps/appmanifest_4530370.acf` 中，用记事本查找 `"buildid"`，只需提供这一行。

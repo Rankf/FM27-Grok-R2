@@ -109,7 +109,7 @@ function ReplaceFileWithRetry([string]$source,[string]$destination,[string]$roll
 function SetDllMode([string]$p,$profile,[ValidateSet('original','ca','capa')][string]$mode){$before=DllState $p $profile;if($before.state-in@('missing','unknown')){throw '当前 game_plugin.dll 不受本补丁支持，未作修改'};$tmp=$p+'.fm27grok.tmp';$rollback=$p+'.fm27grok.rollback';if(Test-Path -LiteralPath $tmp){Remove-Item -LiteralPath $tmp -Force};if(Test-Path -LiteralPath $rollback){Remove-Item -LiteralPath $rollback -Force};try{Copy-Item -LiteralPath $p -Destination $tmp -Force;$s=[IO.File]::Open($tmp,'Open','ReadWrite');try{foreach($e in $before.edits){$enable=($e.name-eq'CA'-and$mode-in@('ca','capa'))-or($e.name-eq'PA'-and$mode-eq'capa');$bytes=if($enable){$e.patched}else{$e.original};[void]$s.Seek($e.raw,'Begin');$s.Write($bytes,0,$bytes.Length)};$s.Flush()}finally{$s.Dispose()};$expected=DllState $tmp $profile;if($expected.state-ne$mode){throw '补丁副本验证失败'};ReplaceFileWithRetry $tmp $p $rollback;$after=DllState $p $profile;if($after.state-ne$mode){throw '替换后验证失败'};Remove-Item -LiteralPath $rollback -Force -ErrorAction SilentlyContinue;return $after}catch{if(Test-Path -LiteralPath $rollback){Copy-Item -LiteralPath $rollback -Destination $p -Force};throw}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue;Remove-Item -LiteralPath $rollback -Force -ErrorAction SilentlyContinue}}
 try {
  $manifest=Get-Content -LiteralPath "$PSScriptRoot\manifest.json" -Raw -Encoding UTF8 | ConvertFrom-Json
- Write-Host 'FM27 Grok - 基准 Build 26620374 R2.5 测试适配包（CA / CA+PA 可选）' -ForegroundColor Cyan
+ Write-Host "FM27 Grok - 基准 Build $($manifest.build) $($manifest.installerRevision) 测试适配包（CA / CA+PA 可选）" -ForegroundColor Cyan
  if(!$GamePath){
   $candidates=@()
   $steam=(Get-ItemProperty 'HKCU:\Software\Valve\Steam' -ErrorAction SilentlyContinue).SteamPath
@@ -194,7 +194,7 @@ try {
  if($issues.Count -eq 0 -and !$restoreAllowed){$warnings+='可以按已识别资源安装，但尚无当前 Build 的干净原版记录，菜单3暂不可用；需要恢复时请使用Steam验证。'}
  if($Action -eq 'restore' -and !$restoreAllowed -and $issues.Count -eq 0){$issues+=$restoreReason}
  foreach($warning in $warnings){Write-Host "警告：$warning" -ForegroundColor Yellow}
- $report=[ordered]@{installerRevision='R2.5';targetBuild=$manifest.build;detectedBuild=$actualBuild;buildDetection=$buildReason;files=$rows;hiddenDll=[ordered]@{state=$dllState.state;sha256=$dllState.hash;signaturePairs=$dllState.signaturePairs;gateRaw=$dllState.gateRaw;detection=$manifest.hiddenDll.detection};issues=$issues;warnings=$warnings;action=$Action;canProceed=($issues.Count -eq 0);canRestore=$restoreAllowed;restoreReason=$restoreReason;verifiedOriginalsForCurrentBuild=$verifiedOriginals;note='UI资源未知仍停止；CA/PA按唯一代码结构识别，不再因整个DLL哈希变化而误拒绝。'}
+$report=[ordered]@{installerRevision=$manifest.installerRevision;targetBuild=$manifest.build;detectedBuild=$actualBuild;buildDetection=$buildReason;files=$rows;hiddenDll=[ordered]@{state=$dllState.state;sha256=$dllState.hash;signaturePairs=$dllState.signaturePairs;gateRaw=$dllState.gateRaw;detection=$manifest.hiddenDll.detection};issues=$issues;warnings=$warnings;action=$Action;canProceed=($issues.Count -eq 0);canRestore=$restoreAllowed;restoreReason=$restoreReason;verifiedOriginalsForCurrentBuild=$verifiedOriginals;note='UI资源未知仍停止；CA/PA按唯一代码结构识别，不再因整个DLL哈希变化而误拒绝。'}
  try{
   $diag=Join-Path $PSScriptRoot 'Diagnostics';New-Item -ItemType Directory -Path $diag -Force | Out-Null
   $reportPath=Join-Path $diag ('compatibility_'+[DateTime]::Now.ToString('yyyyMMdd_HHmmss_fff')+'.json')
@@ -252,7 +252,7 @@ try {
    foreach($n in @('skin.json','grok.uss')){Copy-Item -LiteralPath "$sourceSkin\$n" -Destination "$skin\$n" -Force;if((Hash "$skin\$n") -ne (Hash "$sourceSkin\$n")){throw '皮肤文件校验失败'}}
   }
   $originalHashes=[ordered]@{};foreach($p in $manifest.files.PSObject.Properties){$originalHashes[$p.Name]=$p.Value.base}
-  [ordered]@{installerRevision='R2.5';actualBuild=$actualBuild;verifiedOriginals=$verifiedOriginals;styleHash=$manifest.styleHash;originalHashes=$originalHashes;lastAction=$Action} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $statePath -Encoding UTF8
+  [ordered]@{installerRevision=$manifest.installerRevision;actualBuild=$actualBuild;verifiedOriginals=$verifiedOriginals;styleHash=$manifest.styleHash;originalHashes=$originalHashes;lastAction=$Action} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $statePath -Encoding UTF8
   if($Action-eq'restore'-and$dllState.state-in@('ca','capa','partial')){[void](SetDllMode $dllPath $manifest.hiddenDll 'original')}
  } catch {
   foreach($p in $manifest.files.PSObject.Properties){Copy-Item -LiteralPath "$backup\resources\$($p.Name)" -Destination (Join-Path $target $p.Name) -Force}
