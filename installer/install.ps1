@@ -1,5 +1,8 @@
 ﻿param([string]$GamePath='', [string]$UserPath='', [ValidateSet('','fixed','overlay','restore','check','ca','capa','off')][string]$Action='', [string]$Resolution='')
 $ErrorActionPreference='Stop'
+. "$PSScriptRoot\runtime.ps1"
+$installLock=$null
+$lockHeld=$false
 function Hash($p) { if(Test-Path -LiteralPath $p -PathType Leaf){$stream=[IO.File]::OpenRead($p);$algo=[Security.Cryptography.SHA256]::Create();try{([BitConverter]::ToString($algo.ComputeHash($stream))).Replace('-','').ToLower()}finally{$stream.Dispose();$algo.Dispose()}} else {''} }
 try {
  $manifest=Get-Content -LiteralPath "$PSScriptRoot\manifest.json" -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -21,13 +24,20 @@ try {
   if(!$GamePath){$GamePath=Read-Host '输入游戏目录（包含 fm_Data）'}
  }
  $GamePath=[IO.Path]::GetFullPath($GamePath.Trim('"'))
+ $lockName='Local\FM27Grok_'+[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($GamePath.ToLowerInvariant())).Replace('/','_')
+ $installLock=New-Object Threading.Mutex($false,$lockName)
+ try{$lockHeld=$installLock.WaitOne(0)}catch [Threading.AbandonedMutexException]{$lockHeld=$true}
+ if(!$lockHeld){throw '此游戏目录已有安装器正在操作'}
+ $dllPath=Join-Path $GamePath $manifest.hiddenDll.relativePath
+ $dllState=DllState $dllPath $manifest.hiddenDll
+ Write-Host "CA/PA 运行时状态 $($dllState.state)"
  $target=Join-Path $GamePath 'fm_Data\StreamingAssets\aa\StandaloneWindows64'
  if(!(Test-Path -LiteralPath $target)){throw '游戏目录不正确'}
  $catalogPath=Join-Path (Split-Path $target -Parent) 'catalog.bin'
  if(!$Action){
   Write-Host '1 固定侧边栏   2 浮动侧边栏   3 卸载并恢复正式版资源   4 只检查兼容性'
   Write-Host '5 只显示 CA   6 显示 CA 和 PA   7 隐藏两项（球员属性页及角色选择页）'
-  Write-Host '数值取自游戏已提供的字段。首次使用本版请先安装侧栏。'
+  Write-Host '菜单 5/6 同步设置运行时数值显示与皮肤栏位，菜单 7 恢复原始显示判断。首次使用请先安装侧栏。'
   switch(Read-Host '输入数字'){ '1'{$Action='fixed'} '2'{$Action='overlay'} '3'{$Action='restore'} '4'{$Action='check'} '5'{$Action='ca'} '6'{$Action='capa'} '7'{$Action='off'} default {exit 0} }
  }
  # Read the appmanifest adjacent to this installation, rather than trusting the banner.
@@ -115,6 +125,7 @@ $report=[ordered]@{installerRevision=$manifest.installerRevision;targetBuild=$ma
   if((Hash $abilityPath) -eq $entry.Value){$mode=$entry.Name}
  }
  if($Action -in @('ca','capa','off')){
+  if($dllState.state -in @('missing','unknown')){throw '当前 DLL 的 CA/PA 结构无法唯一识别'}
   $variant=@('fixed','overlay') | Where-Object {$manifest.catalog.variants.$_ -eq $catalogHash} | Select-Object -First 1
   if(!$variant){throw '请先用本版菜单 1 或 2 安装侧栏，再选择能力显示方式。'}
   foreach($p in $manifest.variants.$variant.PSObject.Properties){
@@ -124,16 +135,27 @@ $report=[ordered]@{installerRevision=$manifest.installerRevision;targetBuild=$ma
   if((Hash "$skin\skin.json") -notin $descriptors -or !(Test-Path -LiteralPath $abilityPath -PathType Leaf)){throw '请确认用户目录，并先用菜单 1 或 2 安装本版。'}
   $temp=Join-Path $skin ([IO.Path]::GetRandomFileName())
   $saved=Join-Path $UserPath ('FM27_Grok_'+$manifest.build+'_Backups\'+[Guid]::NewGuid().ToString()+'\ability.uss')
+  $dllSaved=Join-Path ([IO.Path]::GetDirectoryName($saved)) 'game_plugin.dll'
+  $runtimeMode=if($Action -eq 'off'){'original'}else{$Action}
+  $dllChanged=$false
   try{
    [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($saved))
    Copy-Item -LiteralPath "$PSScriptRoot\ability\$Action.uss" -Destination $temp
    if((Hash $temp) -ne $manifest.abilityModes.$Action){throw '写入样式校验失败'}
+   Copy-Item -LiteralPath $dllPath -Destination $dllSaved
+   if((Hash $dllSaved) -ne $dllState.hash){throw '运行时备份校验失败'}
+   [void](SetDllMode $dllPath $manifest.hiddenDll $runtimeMode)
+   $dllChanged=$true
    [IO.File]::Replace($temp,$abilityPath,$saved)
+  }catch{
+   if($dllChanged){Copy-Item -LiteralPath $dllSaved -Destination $dllPath -Force}
+   throw
   }finally{if(Test-Path -LiteralPath $temp){Remove-Item -LiteralPath $temp}}
   Write-Host '显示设置已保存，重启游戏后生效。'
   exit 0
  }
  $sourceSkin=$null
+ if($Action -eq 'restore' -and $dllState.state -in @('missing','unknown')){throw '运行时状态无法确认，请先恢复当前版本的游戏文件'}
  if($Action -ne 'restore'){
   $res=@('1920x1080','2560x1440','3840x2160','1366x768','1280x720','1440x900')
   if($Action -eq 'overlay'){$res+=@('1280x1024','1024x768')}
@@ -154,6 +176,10 @@ $report=[ordered]@{installerRevision=$manifest.installerRevision;targetBuild=$ma
  foreach($n in @('skin.json','grok.uss','ability.uss')){if(Test-Path -LiteralPath "$skin\$n"){Copy-Item -LiteralPath "$skin\$n" -Destination "$backup\skin\$n"}}
  $hadState=Test-Path -LiteralPath $statePath -PathType Leaf
  if($hadState){Copy-Item -LiteralPath $statePath -Destination "$backup\InstallState.json"}
+ if($Action -eq 'restore'){
+  Copy-Item -LiteralPath $dllPath -Destination "$backup\game_plugin.dll"
+  if((Hash "$backup\game_plugin.dll") -ne $dllState.hash){throw '运行时备份校验失败'}
+ }
  try {
   foreach($p in $manifest.files.PSObject.Properties){
    $n=$p.Name
@@ -174,6 +200,7 @@ $report=[ordered]@{installerRevision=$manifest.installerRevision;targetBuild=$ma
   }
   $originalHashes=[ordered]@{};foreach($p in $manifest.files.PSObject.Properties){$originalHashes[$p.Name]=$p.Value.base}
   [ordered]@{installerRevision=$manifest.installerRevision;actualBuild=$actualBuild;verifiedOriginals=$verifiedOriginals;styleHash=$manifest.styleHash;originalHashes=$originalHashes;originalCatalogHash=$manifest.catalog.base;lastAction=$Action} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $statePath -Encoding UTF8
+  if($Action -eq 'restore'){[void](SetDllMode $dllPath $manifest.hiddenDll 'original')}
  } catch {
   foreach($p in $manifest.files.PSObject.Properties){Copy-Item -LiteralPath "$backup\resources\$($p.Name)" -Destination (Join-Path $target $p.Name) -Force}
   Copy-Item -LiteralPath "$backup\catalog\catalog.bin" -Destination $catalogPath -Force
@@ -184,3 +211,4 @@ $report=[ordered]@{installerRevision=$manifest.installerRevision;targetBuild=$ma
  Write-Host "完成。操作前备份：$backup" -ForegroundColor Green
  if($Action -eq 'restore'){Write-Host '重启游戏后选择默认皮肤。'}else{Write-Host '重启游戏，在设置中选择 FM27_grok。此包为测试适配版，请检查球员页、战术、比赛界面。'}
 } catch { Write-Host $_.Exception.Message -ForegroundColor Red; exit 1 }
+finally {if($lockHeld){$installLock.ReleaseMutex()};if($null -ne $installLock){$installLock.Dispose()}}

@@ -100,7 +100,7 @@
     "skins/FM27_grok_overlay_3840x2160/grok.uss": "76667852f0d74ce9981267db11e16358da6adb7bc3903a8479bf90ff17c94c77",
     "skins/FM27_grok_overlay_3840x2160/skin.json": "72fac745a21de83a5bcd7e1eaea2536821bcdbcbe15755a9c4ae010fab413257"
   },
-  "installerRevision": "R2.6.1",
+  "installerRevision": "R2.6.2",
   "catalog": {
     "relativePath": "fm_Data/StreamingAssets/aa/catalog.bin",
     "base": "bbd96d1b55378db1e6ec85f8e5ea4fd69931924304e4019e4bbeb7cf131edd8b",
@@ -189,5 +189,12 @@
     "ca": "46b58b3f2fc778d6658e02fd0e7304c75f51bd20f1b4e6983156cc9ca62a5189",
     "capa": "608eccd2d3bd7ea6020e3c64e37efacf6b4efaa20e0fb84c85cd35f9d3f4cb1a",
     "off": "ceb057012176b0629ee4df5999a6e9dca6ac69de53e9802d0db02a2860887677"
+  },
+  "hiddenDll": {
+    "relativePath": "fm_Data/Plugins/x86_64/game_plugin.dll",
+    "detection": "unique-shared-gate-v1",
+    "caGuard": "4181ff42414350",
+    "paGuard": "4181ff42415050",
+    "skipBytes": 9
   }
 }

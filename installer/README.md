@@ -1,5 +1,7 @@
 # 安装器源文件
 
-这里提供 R2.6.1 的 Windows 安装入口、PowerShell 脚本、资源校验清单和三种能力显示样式。安装请使用 [R2.6.1 完整包](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.6.1-test)，其中包含所需的 bundles、catalogs、originals 和 skins 目录。
+R2.6.2 配合完整包中的 bundles、catalogs、originals、skins 和 ability 目录使用。运行入口为 Install.bat，主脚本为 install.ps1，运行时识别和显示处理位于 runtime.ps1。
 
-菜单 1 或 2 安装所选侧栏及其匹配的资源目录。菜单 5、6、7 切换用户皮肤目录中的 ability.uss，由 skin.json 加载。首次安装默认隐藏两项。菜单 4 可在写入前核对资源；菜单 3 会检验当前 Build 或本机已记录的基础资源，再执行恢复。
+菜单 5／6 将游戏运行时数值显示与皮肤样式同步。菜单 7 恢复原始运行时判断。备份、写入校验、回滚和安装互斥均由安装器处理。
+
+[完整包下载](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.6.2-test)
