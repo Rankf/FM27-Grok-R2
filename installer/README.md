@@ -1,13 +1,5 @@
 # 安装器源文件
 
-R2.5.3 安装器必须配合完整包 bundles、catalogs、originals、skins 使用；单独克隆仓库不能安装。R2.5.3 可直接识别并升级已发布 R2.5／R2.5.1／R2.5.2 的固定／浮动侧栏资源和对应目录。
+这里提供 R2.6.1 的 Windows 安装入口、PowerShell 脚本、资源校验清单和三种能力显示样式。安装请使用 [R2.6.1 完整包](https://github.com/Rankf/FM27-Grok-R2/releases/tag/r2.6.1-test)，其中包含所需的 bundles、catalogs、originals 和 skins 目录。
 
-Build 不同只警告，相关资源及样式必须匹配。legacyGrokV2 分支仍要求对应 Steam 清单确认实际 Build 为本包制作基准 26620374。未知资源不放行。
-
-恢复要求实际 Build 等于制作基准，或 FM27_Grok_InstallState.json 记录本安装器在同一 Build 见过全部匹配的干净原版资源。Build 再次变化使记录失效；没有证据时使用 Steam 验证恢复。
-
-菜单 5 只启用真实 CA，菜单 6 启用 CA+PA，菜单 7 恢复 CA/PA 原始显示指令。安装器扫描 PE 可执行区，只有唯一一对 CA/PA 判断汇合到受支持的隐藏值分支时才操作，不依赖完整 DLL 哈希。写入先在副本中完成并重新扫描验证，再带短暂重试地替换原文件；持续占用会给出中文提示并回滚。该功能不依赖游戏内修改器，不改变存档或球员数值，也不覆盖 DLL 的其他修改。
-
-安装器将 7 个 UI bundle 与所选变体的 `catalog.bin` 成套处理，防止 Addressables 使用原版 CRC 拒绝修改包。目录文件同样参与识别、包内校验、操作前备份、卸载恢复和失败回滚。
-
-Diagnostics 报告包含警告、bundle／catalog 判定、canRestore 及 DLL 状态。皮肤资源写入前备份，写入失败尝试回滚。
+菜单 1 或 2 安装所选侧栏及其匹配的资源目录。菜单 5、6、7 切换用户皮肤目录中的 ability.uss，由 skin.json 加载。首次安装默认隐藏两项。菜单 4 可在写入前核对资源；菜单 3 会检验当前 Build 或本机已记录的基础资源，再执行恢复。

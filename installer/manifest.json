@@ -1,99 +1,58 @@
 {
-  "build": "26620374",
+  "build": "26797085",
   "files": {
     "ui-datacollections_assets_all.bundle": {
       "base": "8aa059224502d02f729dda92e8afebdc53ae78613577898a89d16cd0f6dd91cf",
       "accepted": [
-        "5ad9f712ca528aef8c105f87ec8dd367af481716642f3824d02ae444bc042da4",
-        "8aa059224502d02f729dda92e8afebdc53ae78613577898a89d16cd0f6dd91cf",
-        "9d1f27304ea6020f7b432bfdf5209e06eb97a6be820107108c266f2002a11cdd",
-        "bc395f970c2bc63b9b666890f3d32d6eac90ef6565d638559c554f54d7c77f94"
+        "9d1f27304ea6020f7b432bfdf5209e06eb97a6be820107108c266f2002a11cdd"
       ],
-      "legacyGrokV2": [
-        "cddf4059efc1758a9fea0b02c66ecd61ad2f42098d5e16eafd5c0fa4699d9f2c"
-      ]
+      "legacyGrokV2": []
     },
     "ui-tablefactories_assets_all.bundle": {
       "base": "0b4a3e6832df2a78d16ae0773e72038ff59b15590f967e2a2f4480d0b520fa73",
       "accepted": [
-        "0b4a3e6832df2a78d16ae0773e72038ff59b15590f967e2a2f4480d0b520fa73",
-        "6a0cef96f1d6264c2c01b534593970589326177f6872d1dea67c7eb8e3ec8e8c",
-        "c2e34ebdc39da4a3acb856e994e9eb0effbc0dc7e966a3567c84e4bba646cd3b",
         "c450dcf5ad7a8d9cc423a89e9f2409a066e36659492c8bd7e22ed5c3d5fabb34"
       ],
-      "legacyGrokV2": [
-        "1cf1e31e643c2afe3ab8dbb3c64ecc72156968234dde46920fc8e830848cec07"
-      ]
+      "legacyGrokV2": []
     },
     "ui-tableviews_assets_all.bundle": {
       "base": "398948cb49cf887623eed03db760fc35cd3ef44185cee4258498c6167df88aff",
       "accepted": [
-        "0e622a34abb79cfc93754ce8827257c537a328835f3b091f7d83b1a3e4fbaaa8",
-        "23be8fefd132b85ccb80ebbfe8d5c967688751c197585e28b27380a3b0379cf4",
-        "398948cb49cf887623eed03db760fc35cd3ef44185cee4258498c6167df88aff",
-        "90e56b4e006411f34b3f426f97bbeda7b985ab24abd627b29b8ebc35d56aadcd"
+        "0e622a34abb79cfc93754ce8827257c537a328835f3b091f7d83b1a3e4fbaaa8"
       ],
-      "legacyGrokV2": [
-        "aae3e460e2d5f3b962594f65c9cec2b736c1af0c4c0ad10e8421fc54c6f30fb3"
-      ]
+      "legacyGrokV2": []
     },
     "ui-tileslayouts_assets_all.bundle": {
       "base": "569666607b04449dd48c00390615b196c0218889c406a6cb0d46d5754d0792e6",
       "accepted": [
-        "569666607b04449dd48c00390615b196c0218889c406a6cb0d46d5754d0792e6",
-        "753e7d8d075e3028b013a388ec8d6fcd92f93fb812d9150d8312cc72c47710e7",
-        "dd934510ec9b71e67e0b478a674aefca5bfb118c523525d1eb51cf8e53fff171",
         "fd5128400084823a659335edf78c1c1751970d4dbbc150c1ba7773b0620aed3d"
       ],
-      "legacyGrokV2": [
-        "bca86a59210ae312bd5ef9748a47b3ce23be8095193e8fac79e67b920e8557ab"
-      ]
+      "legacyGrokV2": []
     },
     "ui-visualtreeassets_assets_gameworldvisualtreeassetpreload.bundle": {
-      "base": "1618945bc2fd70fa234d61ee35b4802012b56fdf3b2bbaca062bdaad732059d2",
+      "base": "aded80c3beedcd4be426bb673de0ad407aad0568a7ad92d64763b7fe3ee84aef",
       "accepted": [
-        "06a3083712680dd821f81a05dc6bd30d902e7a8dbfa9ab44d808033dfb45deac",
-        "1618945bc2fd70fa234d61ee35b4802012b56fdf3b2bbaca062bdaad732059d2",
-        "37a6446666958ca1744df652f15ee9b627e87bae9a9d9855391430800bb902c3",
-        "5b017cad4954625832dc8ad1bb2e30c8fa61acec9fa942bec307ae789609a84c",
-        "6afa77440213f7bb41df446b5daef85deb4081cb2bb227bf78340cbcd10cb8ff",
-        "8d78b43020e04aed1457c3f64c5b48e4e522f1a473d2413c542622a40418033e",
-        "9192f57ba8c9f5060b316b369582574831cbc61baa53da93e57b53088a7deb02",
-        "98f55a96acc851880bbf6b55fc979f731bfe0ac83bee32f9ce64da7caffe6b9b",
-        "e0a92b01c6160671e723270e9075c1ffc25199741c523cfd334863eacdad4308"
+        "02735cda181de1ee8443e01626b8ca60095b4b74e5679b9b3a685a430588f8b0",
+        "e1394a9e8e31907b03d0dece0c821039d4214b139d13c7d302e59d535e84ad90",
+        "f6ba6253912a706e19435e742bfa567a618a139eb316a7404e87050602c17749",
+        "e23e2eff3e1a13edf9519e8a2a3b0b7223cc2415c3535fd12ec46cd12af2d48d"
       ],
-      "legacyGrokV2": [
-        "03ab79d447acd4f49854f56e51e7771e10d2b5ade820b16aeb8497451cabc6ab",
-        "0b5b2bca10e6226421132ee2120ca05eea8c138ca553af74ee082001d7a20d68",
-        "240ae5734f0cab01c97bd435f3358fd78da76a6d8fcda3dd847b01cc858bbe59",
-        "71b3792b47f5de12caf1c90ae4b70afb0aec3e4d4ed17a6aecbb4aa357767319"
-      ]
+      "legacyGrokV2": []
     },
     "ui-visualtreeassets_assets_globalvisualtreeassetpreload.bundle": {
-      "base": "9912a5b1b264112739dff1487414725dd5277ad87bab5526291ea751b2859559",
+      "base": "c176eea98119332512cd3e5ab1ee07a11e0e3c5b2e55cb6caa1f8ef54b69ed20",
       "accepted": [
-        "0c82ad17e9ea8a0daade28515f33bf5c83e174d1a59894ba19633e49110c620a",
-        "6ed36b0dbfd9a8e4256d5f771c54c899df4557cf7576cee9bda2a0a652c28b8b",
-        "9912a5b1b264112739dff1487414725dd5277ad87bab5526291ea751b2859559",
-        "ef61332b2320def3e2a568771a7deb4c1eab523f3595304fdeb9704e53869d9e"
+        "ef61332b2320def3e2a568771a7deb4c1eab523f3595304fdeb9704e53869d9e",
+        "1a8295c61a605f4d729732cb8e178b8c2bda62cf259b622cd6db7e4ea6541424"
       ],
-      "legacyGrokV2": [
-        "360d2271dab6158e8c7283cbe784dbd612ff2716a9183afdf82d9e47863e214d",
-        "afb9f893414e248dc03ce90bfae36a52249c03b23c66d24945bcc6da4480ce3c"
-      ]
+      "legacyGrokV2": []
     },
     "ui-visualtreeassets_assets_matchvisualtreeassetpreload.bundle": {
       "base": "25fad901a77a442afb2c04a967cb0338590aa6a8ca37d90d0b3846fbb2a0667e",
       "accepted": [
-        "1883905d4859a90d7de01d34397b3019587004e2e8cdf21bd7fa3e57788c1eee",
-        "25fad901a77a442afb2c04a967cb0338590aa6a8ca37d90d0b3846fbb2a0667e",
-        "26290b2a1362f6399db0406ba8de73e4224db541fffbf60744bfa0b3bcf72502",
-        "a3e48cc87c445c9590c3adaf3964f6bc9ba77ac32b2240b3924901773adf60cf",
-        "cf7f5e6b25b45668da7db634d95a5a785e8ce601f11a2b5e566a3ccc54e8f7b2"
+        "404200d553173044dd6619a9046eb1ea3f5f62df339f1e8679c8152b6e98d478"
       ],
-      "legacyGrokV2": [
-        "e806d6e94f2eb61df75bc24826c5bf179b698d2fc00110b29ac71e0227f83b5f"
-      ]
+      "legacyGrokV2": []
     }
   },
   "variants": {
@@ -102,8 +61,8 @@
       "ui-tablefactories_assets_all.bundle": "c450dcf5ad7a8d9cc423a89e9f2409a066e36659492c8bd7e22ed5c3d5fabb34",
       "ui-tableviews_assets_all.bundle": "0e622a34abb79cfc93754ce8827257c537a328835f3b091f7d83b1a3e4fbaaa8",
       "ui-tileslayouts_assets_all.bundle": "fd5128400084823a659335edf78c1c1751970d4dbbc150c1ba7773b0620aed3d",
-      "ui-visualtreeassets_assets_gameworldvisualtreeassetpreload.bundle": "02735cda181de1ee8443e01626b8ca60095b4b74e5679b9b3a685a430588f8b0",
-      "ui-visualtreeassets_assets_globalvisualtreeassetpreload.bundle": "ef61332b2320def3e2a568771a7deb4c1eab523f3595304fdeb9704e53869d9e",
+      "ui-visualtreeassets_assets_gameworldvisualtreeassetpreload.bundle": "7b46b65d5132510ba0c7d34b7122cccee5101654fe81ff759684b9d523128bb4",
+      "ui-visualtreeassets_assets_globalvisualtreeassetpreload.bundle": "8c119af16f9c4d57fd9e5e5ae8c8204568d5d9fc72ca65b0941caf8c6d88350b",
       "ui-visualtreeassets_assets_matchvisualtreeassetpreload.bundle": "404200d553173044dd6619a9046eb1ea3f5f62df339f1e8679c8152b6e98d478"
     },
     "overlay": {
@@ -111,63 +70,52 @@
       "ui-tablefactories_assets_all.bundle": "c450dcf5ad7a8d9cc423a89e9f2409a066e36659492c8bd7e22ed5c3d5fabb34",
       "ui-tableviews_assets_all.bundle": "0e622a34abb79cfc93754ce8827257c537a328835f3b091f7d83b1a3e4fbaaa8",
       "ui-tileslayouts_assets_all.bundle": "fd5128400084823a659335edf78c1c1751970d4dbbc150c1ba7773b0620aed3d",
-      "ui-visualtreeassets_assets_gameworldvisualtreeassetpreload.bundle": "e1394a9e8e31907b03d0dece0c821039d4214b139d13c7d302e59d535e84ad90",
-      "ui-visualtreeassets_assets_globalvisualtreeassetpreload.bundle": "ef61332b2320def3e2a568771a7deb4c1eab523f3595304fdeb9704e53869d9e",
+      "ui-visualtreeassets_assets_gameworldvisualtreeassetpreload.bundle": "0193a96e2d5f8ec49e55f29811b824ae2315aab640972fbed1ae78be80795275",
+      "ui-visualtreeassets_assets_globalvisualtreeassetpreload.bundle": "8c119af16f9c4d57fd9e5e5ae8c8204568d5d9fc72ca65b0941caf8c6d88350b",
       "ui-visualtreeassets_assets_matchvisualtreeassetpreload.bundle": "404200d553173044dd6619a9046eb1ea3f5f62df339f1e8679c8152b6e98d478"
     }
   },
   "styleHash": "44f92ef5b5bc0537e3821cbf963aab2fa25563e1b9695895337d26cc0fc914a7",
   "skinHashes": {
     "skins/FM27_grok_fixed_1366x768/grok.uss": "633ea4ef55ff9e706aa76f8f73e07728166e38ffafec737d9f4fa777ef5a3e6c",
-    "skins/FM27_grok_fixed_1366x768/skin.json": "671b0569494c3361d23a6a38d0a69fa24a4569808c4464c2308cbd191dcc7d8c",
+    "skins/FM27_grok_fixed_1366x768/skin.json": "e37457144386f6f58f430faae71781e0bf28abdae9a48cc2dc9f93e929334f8d",
     "skins/FM27_grok_fixed_1440x900/grok.uss": "1569edaac0010630531577015f21f2c9f5e52cd8c6545862dd79807e047ccabe",
-    "skins/FM27_grok_fixed_1440x900/skin.json": "bd4f562aac7404ce65b2b545d4934a85993ca88d82d8374b3cbf99940315c695",
+    "skins/FM27_grok_fixed_1440x900/skin.json": "dece0529c108e812170f6f334058b7cde8dd51fcc1fad525e55e8f2d4fa41e44",
     "skins/FM27_grok_fixed_1920x1080/grok.uss": "7dad06c7ab8aaa1ac67edae6ffcb29660156b388d5111edd1cce40a87de37651",
-    "skins/FM27_grok_fixed_1920x1080/skin.json": "aef22699fa94d04ee7c536e95ceadd07ac586864fc6bd0d06eac52e39bb2ecc3",
+    "skins/FM27_grok_fixed_1920x1080/skin.json": "7c59ed98633cacf90154ad53fda50d8b87921555866d27e7a303e3e98f027692",
     "skins/FM27_grok_fixed_2560x1440/grok.uss": "949c9f11449f4adf8bb75f3fcecb2066caf62f09518381507b3cd55637a71e08",
-    "skins/FM27_grok_fixed_2560x1440/skin.json": "74a7348ecf03911948686d85e615029b4c35ad0a8787b1dc327a88cd3932d9ea",
+    "skins/FM27_grok_fixed_2560x1440/skin.json": "22b88edbf57c1885d67a51730f8a314bbfb3b1dcfe34e07d6783da5aeabd81b1",
     "skins/FM27_grok_fixed_3840x2160/grok.uss": "201db9e1e3e25df6e27391b529cd3f283503d360c0f52f64fff6a1f5ffec95c0",
-    "skins/FM27_grok_fixed_3840x2160/skin.json": "190e368696a20d64ef23858375f143638f3d05a27faa59aee973b302cce8b759",
+    "skins/FM27_grok_fixed_3840x2160/skin.json": "42cf1c1a18c42009b41fd514ac013d75fa5fdc02e9eb501255efc5d3dc71169c",
     "skins/FM27_grok_overlay_1280x1024/grok.uss": "c9d2bee0ca832d7bffd84f400dfcba7190a619e24d153b6812a0954e9ac93493",
-    "skins/FM27_grok_overlay_1280x1024/skin.json": "2443d5e2cc110bc625590e7fb5c71ceb5db3c95a9d514a872d70effb3a923ce8",
+    "skins/FM27_grok_overlay_1280x1024/skin.json": "1dbd0e96beb803129f236b0d0b5f4954ffc4df526e043b72674776ce7fab6114",
     "skins/FM27_grok_overlay_1366x768/grok.uss": "6fd69a62f7aa5f6acad1429b8789bc72cfa3ae0b2582bbe352f98faa94c52534",
-    "skins/FM27_grok_overlay_1366x768/skin.json": "1b35edf4d6278e002f7fb76fd07a31cba25a6ea952dcf84c68a69fd78bb76211",
+    "skins/FM27_grok_overlay_1366x768/skin.json": "2ce77187eb95a159069ad64a041047498da8b2c80b865440388c4beaa6e6d193",
     "skins/FM27_grok_overlay_1440x900/grok.uss": "6d35b11012e738180c60694ee72f574d2ec84b041b2b2c568a668c00c35b835f",
-    "skins/FM27_grok_overlay_1440x900/skin.json": "a41423a9f6156106fca152d2080b685ee0f9e848dd84a35307071853a4bea948",
+    "skins/FM27_grok_overlay_1440x900/skin.json": "c5861a1b40ee75be6a36fe103985ddfdd62107bdb6129259b71f4552616eb3d2",
     "skins/FM27_grok_overlay_1920x1080/grok.uss": "786c5547a10848e4d99bc927dcc9290bb97b10755908807c4cb094ae8a09b45c",
-    "skins/FM27_grok_overlay_1920x1080/skin.json": "60ffa1edbd2f32edf9ebccf6c481f333ccca55f47e817145efcd14c85158eba6",
+    "skins/FM27_grok_overlay_1920x1080/skin.json": "edcdacc77b12178ebe79d3c66abe247872aa4d74ee32c8e1ef0cc0921aaeab40",
     "skins/FM27_grok_overlay_2560x1440/grok.uss": "7ed6a64e9ec9c1caa1ba559daac7fd00e9d3850de88dd4d67b58edff36196a84",
-    "skins/FM27_grok_overlay_2560x1440/skin.json": "de563da0f98b2f799fa6ed1b9acb165a81b894d4ff984bd1abd8fa959ad93e73",
+    "skins/FM27_grok_overlay_2560x1440/skin.json": "b3c95fff8d4cd7d242f09d7049d7228522b16931922da8346ab11e39ce6f7b09",
     "skins/FM27_grok_overlay_3840x2160/grok.uss": "76667852f0d74ce9981267db11e16358da6adb7bc3903a8479bf90ff17c94c77",
-    "skins/FM27_grok_overlay_3840x2160/skin.json": "d3ba448a098626de2e945cf5a958065c346db7450cb867063e5254b71a469f1f"
+    "skins/FM27_grok_overlay_3840x2160/skin.json": "72fac745a21de83a5bcd7e1eaea2536821bcdbcbe15755a9c4ae010fab413257"
   },
-  "hiddenDll": {
-    "relativePath": "fm_Data/Plugins/x86_64/game_plugin.dll",
-    "detection": "unique-shared-gate-v1",
-    "caGuard": "4181ff42414350",
-    "paGuard": "4181ff42415050",
-    "skipBytes": 9
-  },
-  "installerRevision": "R2.5.3",
+  "installerRevision": "R2.6.1",
   "catalog": {
     "relativePath": "fm_Data/StreamingAssets/aa/catalog.bin",
-    "base": "7e83abcb289a0401504faf6a6f7dbe092c6663670155962a4576bcc1101ab12d",
+    "base": "bbd96d1b55378db1e6ec85f8e5ea4fd69931924304e4019e4bbeb7cf131edd8b",
     "accepted": [
-      "42de1f689d7a07627901af7c4b7f1c34ea641caca85193b79d3b79a0a77f9380",
-      "96b1402147652fb5cd7ac2b4f8beb8e9b90340b04528baf1a032c0d86e417382"
+      "4672a7467fdb75171f5a23afa8ae8a384ff206da526e011e5fa0a12ddf8dc27a",
+      "6440c6e0861173d0f672a30e8866e05c287d7d3c4bb3460318b6b620dd472dc2"
     ],
-    "variants": {
-      "fixed": "06d587fc08f70cbaaaf20566f850b185ea775d93b2176a21620e08cf49d602e0",
-      "overlay": "e42dd64250a6e93a372b4122ab022c42de1f80d91176c1827fe6da1092baad9a"
-    },
     "records": [
       {
         "name": "ui-datacollections_assets_all.bundle",
         "originalCrc": 2980233661,
         "originalSize": 145994,
-        "catalogOffset": 397996,
         "fixedCrc": 756995306,
         "fixedSize": 146728,
+        "catalogOffset": 397996,
         "overlayCrc": 756995306,
         "overlaySize": 146728
       },
@@ -175,9 +123,9 @@
         "name": "ui-tablefactories_assets_all.bundle",
         "originalCrc": 3638037946,
         "originalSize": 186035,
-        "catalogOffset": 410190,
         "fixedCrc": 2490620009,
         "fixedSize": 188085,
+        "catalogOffset": 410190,
         "overlayCrc": 2490620009,
         "overlaySize": 188085
       },
@@ -185,9 +133,9 @@
         "name": "ui-tableviews_assets_all.bundle",
         "originalCrc": 2043102592,
         "originalSize": 359788,
-        "catalogOffset": 410462,
         "fixedCrc": 129563893,
         "fixedSize": 363812,
+        "catalogOffset": 410462,
         "overlayCrc": 129563893,
         "overlaySize": 363812
       },
@@ -195,42 +143,51 @@
         "name": "ui-tileslayouts_assets_all.bundle",
         "originalCrc": 961124700,
         "originalSize": 933527,
-        "catalogOffset": 411896,
         "fixedCrc": 3793157531,
         "fixedSize": 941547,
+        "catalogOffset": 411896,
         "overlayCrc": 3793157531,
         "overlaySize": 941547
       },
       {
         "name": "ui-visualtreeassets_assets_gameworldvisualtreeassetpreload.bundle",
-        "originalCrc": 259756004,
-        "originalSize": 9333802,
+        "originalCrc": 2853863696,
+        "originalSize": 9333980,
+        "fixedCrc": 1951404536,
+        "fixedSize": 9451946,
         "catalogOffset": 412864,
-        "fixedCrc": 3751096454,
-        "fixedSize": 9451899,
-        "overlayCrc": 3394371027,
-        "overlaySize": 9450585
+        "overlayCrc": 4184261786,
+        "overlaySize": 9450241
       },
       {
         "name": "ui-visualtreeassets_assets_globalvisualtreeassetpreload.bundle",
-        "originalCrc": 1117165080,
-        "originalSize": 3714885,
+        "originalCrc": 3701217634,
+        "originalSize": 3715979,
+        "fixedCrc": 1188912986,
+        "fixedSize": 3760174,
         "catalogOffset": 413198,
-        "fixedCrc": 2362557671,
-        "fixedSize": 3760091,
-        "overlayCrc": 2362557671,
-        "overlaySize": 3760091
+        "overlayCrc": 1188912986,
+        "overlaySize": 3760174
       },
       {
         "name": "ui-visualtreeassets_assets_matchvisualtreeassetpreload.bundle",
         "originalCrc": 1704242069,
         "originalSize": 539034,
-        "catalogOffset": 414192,
         "fixedCrc": 1418010579,
         "fixedSize": 555606,
+        "catalogOffset": 414192,
         "overlayCrc": 1418010579,
         "overlaySize": 555606
       }
-    ]
+    ],
+    "variants": {
+      "fixed": "a0c3ea07f8736a536aeb2cba5c9f107eababb9044e7b3617853ca391247378c3",
+      "overlay": "f6bd1a6f746a7ef8efaa580b6d1e1507e98b60e29c370b48bac76f293b3c7c2c"
+    }
+  },
+  "abilityModes": {
+    "ca": "46b58b3f2fc778d6658e02fd0e7304c75f51bd20f1b4e6983156cc9ca62a5189",
+    "capa": "608eccd2d3bd7ea6020e3c64e37efacf6b4efaa20e0fb84c85cd35f9d3f4cb1a",
+    "off": "ceb057012176b0629ee4df5999a6e9dca6ac69de53e9802d0db02a2860887677"
   }
 }
